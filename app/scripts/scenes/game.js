@@ -36,17 +36,16 @@ export default class Game extends Phaser.Scene {
       this.teams.push(new Team(this, i, this.cities["Melbourne"]));
     }
 
-
-    this.createCitiesAndConnections();
-
     this.gameState = 0;
 
     // console.log(this.getReachableCities('Melbourne', 3));
 
     // Todo: Use this code to calculate distances and to move a team
-    // this.teams[0].brainPoints = 5;
-    // let exampleDestination = this.getReachableCities('Melbourne', 3)[2];
-    // this.teams[0].move(this.cities[exampleDestination[0]], exampleDestination[1]);
+    this.teams[0].brainPoints = 5;
+    setTimeout(() => {
+      let exampleDestination = this.getReachableCities('Melbourne', 3)[2];
+      this.teams[0].move(this.cities[exampleDestination[0]], exampleDestination[1]).then(() => console.log("ready"));
+    }, 500);
 
   }
 
@@ -73,7 +72,7 @@ export default class Game extends Phaser.Scene {
   startQuiz() {
     console.log("starting next question");
     // TODO show question and start timer
-    // TODO get next question randomly
+    // TODO get next question randomly and remember id to not select it again
     this.gameState = 1;
     this.currentQuiz = {}; // TODO: select a random quiz riddle
     this.currentQuiz.startTime = new Date().getTime();
@@ -94,21 +93,30 @@ export default class Game extends Phaser.Scene {
   showAnswer() {
     this.gameState = 2;
     // TODO show answer
+    // TODO adapt buttons:
+    //   - if a team answered -> correct, wrong -> answerConfirmed
+    //   - else -> ok -> back to gameState 0
+    //if (this.currentQuiz.answeringTeam != undefined) {
+
+    //} else {
+
+    //}
   }
 
+
   answerConfirmed(correct) {
-    // TODO compute points
+    // TODO balance scoring function
+    let maxPoints = this.currentQuiz.maxPoints; // TODO derive from difficulty
+    let points = Math.round(((this.currentQuiz.duration - this.currentQuiz.answerTime) / this.currentQuiz.duration) * maxPoints);
     if (correct) {
-
+        this.teams[this.currentQuiz.answeringTeam].brainPoints += points;
     } else {
-
+        let otherTeam = (this.currentQuiz.answeringTeam + 1) % 2;
+        this.teams[otherTeam].brainPoints += points / 2;
     }
     this.gameState = 3;
   }
 
-  travel() {
-    // ...?
-  }
 
 
   registerDebugKeyHandlers() {

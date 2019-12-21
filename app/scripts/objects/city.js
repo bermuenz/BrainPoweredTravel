@@ -19,6 +19,30 @@ export default class City extends Phaser.GameObjects.Sprite {
     }
     scene.add.existing(this);
 
+    this.setInteractive();
+    this.on('pointerup', (event) => {
+      // TODO check if valid (gameState and distance)
+      this.scene.teams[0].move(this.cityId, 1);
+    });
+    this.on('pointerover', (event, gameObject) => {
+      this.highlight(true);
+    });
+    this.on('pointerout', (event, gameObject) => {
+      this.highlight(false);
+    });
+
+  }
+
+  highlight(isHighlight) {
+    if (isHighlight) {
+      this.setTint(0x00ff00);
+    } else {
+      if (this.isIntermediatePoint) {
+        this.tint = 0xaa3f3f;
+      } else {
+        this.clearTint();
+      }
+    }
   }
 
   /**
