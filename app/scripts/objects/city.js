@@ -21,16 +21,26 @@ export default class City extends Phaser.GameObjects.Sprite {
 
     this.setInteractive();
     this.on('pointerup', (event) => {
-      // TODO check if valid (gameState and distance)
-      this.scene.teams[0].move(this.cityId, 1);
+      // TODO check if valid gameState
+      let reachableCities = this.scene.activeTeam.getReachableCities();
+      let reachableCity = reachableCities.find(c => c.cityId == this.cityId);
+      if (reachableCity) {
+        let city = this.scene.cities[reachableCity.cityId];
+        let distance = reachableCity.distance;
+        this.scene.activeTeam.move(city, distance);
+        this.scene.activeTeam.highlightValidRoutes(); // TODO remove -> appropriate state transition
+      }
+
     });
+    /*
     this.on('pointerover', (event, gameObject) => {
       this.highlight(true);
+      // TODO highlight route to this city
     });
     this.on('pointerout', (event, gameObject) => {
       this.highlight(false);
     });
-
+    */
   }
 
   highlight(isHighlight) {
