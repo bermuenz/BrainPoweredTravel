@@ -1,6 +1,6 @@
 import Map from '@/objects/map';
 import Team from '@/objects/team';
-import Quizcard from '@/objects/quizcard';
+//import Quizcard from '@/objects/quizcard';
 import City from '@/objects/city';
 import Connection from '@/objects/connection';
 import Topology from '@/topology';

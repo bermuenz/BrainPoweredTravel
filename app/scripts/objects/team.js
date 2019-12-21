@@ -1,6 +1,6 @@
 import Token from '@/objects/token';
 import BrainPower from '@/objects/brainpower';
-import EcoFootprint from '@/objects/ecofootprint';
+import EcoFootprint from '@/objects/ecoFootprint';
 
 export default class Team {
 
