@@ -32,24 +32,26 @@ export default class Team {
   }
 
   move(targetCity, distance) {
+    return new Promise((resolve, reject) => {
+      this.brainPoints -= distance;
+      if (distance == 2) {
+        this.ecoPoints += 1;
+      } else if (distance == 3) {
+        this.ecoPoints += 3;
+      } else if (distance == 4) {
+        this.ecoPoints += 5;
+      }
 
-    this.brainPoints -= distance;
-    if (distance == 2) {
-      this.ecoPoints += 1;
-    } else if (distance == 3) {
-      this.ecoPoints += 3;
-    } else if (distance == 4) {
-      this.ecoPoints += 5;
-    }
-
-    this.currentCity = targetCity;
-    this.scene.tweens.add({
-        targets: this.token,
-        x: this.currentCity.x,
-        y: this.currentCity.y + 3,
-        duration: 1000,
-        ease: 'Quadratic'
-    })
+      this.currentCity = targetCity;
+      this.scene.tweens.add({
+          targets: this.token,
+          x: this.currentCity.x,
+          y: this.currentCity.y + 3,
+          duration: 1000,
+          ease: 'Quadratic',
+          onComplete: resolve
+      });
+    });
   }
 
   /**
