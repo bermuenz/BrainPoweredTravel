@@ -5,7 +5,7 @@ export default class Token extends Phaser.GameObjects.Sprite {
    *  @extends Phaser.GameObjects.Sprite
    */
   constructor(scene, team) {
-    super(scene, x, y, 'token-' + team.teamId);
+    super(scene, 0, 0, 'token-' + team.teamId);
 
     this.team = team;
 

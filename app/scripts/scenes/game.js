@@ -1,4 +1,6 @@
 import Map from '@/objects/map';
+import Team from '@/objects/team';
+import Quizcard from '@/objects/quizcard';
 import City from '@/objects/city';
 import Connection from '@/objects/connection';
 import Topology from '@/topology';
@@ -22,7 +24,12 @@ export default class Game extends Phaser.Scene {
    */
   create(/* data */) {
     //  TODO: Replace this content with really cool game code here :)
-    this.gamefield = this.add.existing(new Map(this));
+    this.map = new Map(this);
+
+    this.teams = [];
+    for (let i=0; i<2; i++) {
+      this.teams.push(new Team(this, i));
+    }
 
     this.createCitiesAndConnections();
   }
@@ -68,6 +75,6 @@ export default class Game extends Phaser.Scene {
    *  @param {number} dt Time elapsed since last update.
    */
   update(/* t, dt */) {
-    this.gamefield.update();
+    this.map.update();
   }
 }
