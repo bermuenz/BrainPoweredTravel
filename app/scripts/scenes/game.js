@@ -35,6 +35,8 @@ export default class Game extends Phaser.Scene {
     }
 
     this.createCitiesAndConnections();
+
+    // console.log(this.getReachableCities('Melbourne', 3));
   }
 
   registerDebugKeyHandlers() {
@@ -79,6 +81,11 @@ export default class Game extends Phaser.Scene {
     });
   }
 
+
+  /**
+   * Parse the topology from the topology.js file and create the City/connection
+   * Game objects
+  **/
   createCitiesAndConnections() {
 
     this.cities = {};
@@ -87,7 +94,6 @@ export default class Game extends Phaser.Scene {
     for (let city of topology.cities) {
       let cityObject = new City(this, city.cityId, city.x, city.y, city.isIntermediatePoint);
       this.cities[city.cityId] = cityObject;
-      this.add.existing(cityObject);
     }
 
     this.connectionLookupTable = {};
@@ -106,9 +112,42 @@ export default class Game extends Phaser.Scene {
       this.connectionLookupTable[connection.end].push(connection.start);
 
       let connectionObject = new Connection(this, this.cities[connection.start], this.cities[connection.end]);
-      this.add.existing(connectionObject);
       this.connections[connection.start + '_' + connection.end] = connectionObject;
     }
+  }
+
+  /**
+   *  Searches for all possible cities a team can travel with the available
+   *  brain points.
+   *
+   *  @protected
+   *  @param {string} startCityId Current city where the team is located
+   *  @param {number} maxDistance Maximum distance the team can travel.
+   *  @return The available cities and the distance to those cities.
+   */
+  getReachableCities(startCityId, maxDistance) {
+    let visitedCities = [startCityId];
+    let currentBacklog = [startCityId];
+    let nextBacklog = [];
+    let reachableCities = [];
+    let currentDistance = 1;
+    while (currentBacklog.length > 0) {
+      let currentCity = currentBacklog.pop();
+      for (let nextCity of this.connectionLookupTable[currentCity]) {
+          if (visitedCities.includes(nextCity)) {
+            continue;
+          }
+          visitedCities.push(nextCity);
+          reachableCities.push([nextCity, currentDistance]);
+          nextBacklog.push(nextCity);
+      }
+      if (currentBacklog.length <= 0 && currentDistance < maxDistance) {
+        currentBacklog = nextBacklog;
+        nextBacklog = [];
+        currentDistance++;
+      }
+    }
+    return reachableCities;
   }
 
   /**

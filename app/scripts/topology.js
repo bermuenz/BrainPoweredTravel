@@ -59,10 +59,6 @@ export default function topology() {
     'connections': [
       {
         'start': 'Melbourne',
-        'end': 'Alice Springs'
-      },
-      {
-        'start': 'Melbourne',
         'end': '4'
       },{
         'start': '4',
