@@ -36,6 +36,7 @@ export default class City extends Phaser.GameObjects.Sprite {
     this.on('pointerover', (event, gameObject) => {
       this.highlight(true);
       // TODO highlight route to this city
+      // but restrict to valid game states
     });
     this.on('pointerout', (event, gameObject) => {
       this.highlight(false);

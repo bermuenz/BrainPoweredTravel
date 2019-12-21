@@ -43,13 +43,16 @@ export default class Team {
       }
 
       this.currentCity = targetCity;
-      this.scene.tweens.add({
+      let moveTween = this.scene.tweens.add({
           targets: this.token,
           x: this.currentCity.x,
           y: this.currentCity.y + 3,
           duration: 1000,
           ease: 'Quadratic',
-          onComplete: resolve
+          onComplete: () => {
+            this.scene.tweens.remove(moveTween);
+            resolve();
+          }
       });
     });
   }
