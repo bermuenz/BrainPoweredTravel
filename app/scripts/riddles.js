@@ -1,4 +1,4 @@
-export default function topology() {
+export default function riddles() {
   return {
   'riddles':[{
     'dID' : '1',
@@ -40,7 +40,8 @@ export default function topology() {
       'duration' : '120',
       'difficulty' : 'hard',
       'maxPoints' : '50',
-    }
+    },
+    
     ]
   };
 }
