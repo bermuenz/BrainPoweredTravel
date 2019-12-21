@@ -23,6 +23,18 @@ export default class Game extends Phaser.Scene {
    *  @param {object} data Initialization parameters.
    */
   create(/* data */) {
+
+    this.input.keyboard.on('keydown_B', () => {
+      this.teams[0].brainPoints++;
+      if (this.teams[0].brainPoints > 100) {
+        this.teams[0].brainPoints = 0;
+      }
+    });
+    // temp playgounds
+    this.input.keyboard.on('keydown_A', () => {
+        this.scene.stop('Game').start('Andi');
+    });
+
     //  TODO: Replace this content with really cool game code here :)
     this.map = new Map(this);
 
@@ -114,5 +126,8 @@ export default class Game extends Phaser.Scene {
    */
   update(/* t, dt */) {
     this.map.update();
+    for (let i=0; i<this.teams.length; i++) {
+      this.teams[i].update();
+    }
   }
 }
