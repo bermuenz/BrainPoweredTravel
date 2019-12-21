@@ -1,4 +1,6 @@
 import Map from '@/objects/map';
+import Team from '@/objects/team';
+import Quizcard from '@/objects/quizcard';
 
 export default class Game extends Phaser.Scene {
   /**
@@ -19,7 +21,14 @@ export default class Game extends Phaser.Scene {
    */
   create(/* data */) {
     //  TODO: Replace this content with really cool game code here :)
-    this.gamefield = this.add.existing(new Map(this));
+    this.map = new Map(this);
+    this.cities = [];
+    this.connections = [];
+    this.teams = [];
+    for (let i=0; i<2; i++) {
+      this.teams.push(new Team(this, i));
+    }
+
   }
 
   /**
@@ -31,6 +40,6 @@ export default class Game extends Phaser.Scene {
    *  @param {number} dt Time elapsed since last update.
    */
   update(/* t, dt */) {
-    this.gamefield.update();
+    this.map.update();
   }
 }
