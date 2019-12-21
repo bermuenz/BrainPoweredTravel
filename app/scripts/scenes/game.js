@@ -24,20 +24,92 @@ export default class Game extends Phaser.Scene {
    */
   create(/* data */) {
 
+    this.registerKeyHandlers();
     this.registerDebugKeyHandlers();
 
-    //  TODO: Replace this content with really cool game code here :)
     this.map = new Map(this);
-
-    this.teams = [];
-    for (let i=0; i<2; i++) {
-      this.teams.push(new Team(this, i));
-    }
 
     this.createCitiesAndConnections();
 
+    this.teams = [];
+    for (let i=0; i<2; i++) {
+      this.teams.push(new Team(this, i, this.cities["Melbourne"]));
+    }
+
+
+    this.createCitiesAndConnections();
+
+    this.gameState = 0;
+
     // console.log(this.getReachableCities('Melbourne', 3));
+
+    // Todo: Use this code to calculate distances and to move a team
+    // this.teams[0].brainPoints = 5;
+    // let exampleDestination = this.getReachableCities('Melbourne', 3)[2];
+    // this.teams[0].move(this.cities[exampleDestination[0]], exampleDestination[1]);
+
   }
+
+  registerKeyHandlers() {
+      this.input.keyboard.on('keydown_SPACE', () => {
+        if (this.gameState == 0) {
+          this.startQuiz();
+        }
+      });
+      this.input.keyboard.on('keydown_Q', () => {
+        if (this.gameState == 1) {
+          this.buzzerPressed(0);
+        }
+      });
+      this.input.keyboard.on('keydown_P', () => {
+        if (this.gameState == 1) {
+          this.buzzerPressed(1);
+        }
+      });
+  }
+
+  // state transitions
+
+  startQuiz() {
+    console.log("starting next question");
+    // TODO show question and start timer
+    // TODO get next question randomly
+    this.gameState = 1;
+    this.currentQuiz = {}; // TODO: select a random quiz riddle
+    this.currentQuiz.startTime = new Date().getTime();
+    this.quizTimeout = setTimeout(() => {
+      // TODO show "time over" message
+      this.showAnswer();
+    }, this.currentQuiz.duration);
+  }
+
+  buzzerPressed(teamId) {
+    clearTimeout(this.quizTimeout);
+    console.log("team " + teamId + " pressed the buzzer");
+    this.currentQuiz.answeringTeam = teamId;
+    this.currentQuiz.answerTime = (new Date().getTime() - this.currentQuiz.startTime) / 1000;
+    this.showAnswer();
+  }
+
+  showAnswer() {
+    this.gameState = 2;
+    // TODO show answer
+  }
+
+  answerConfirmed(correct) {
+    // TODO compute points
+    if (correct) {
+
+    } else {
+
+    }
+    this.gameState = 3;
+  }
+
+  travel() {
+    // ...?
+  }
+
 
   registerDebugKeyHandlers() {
 
@@ -77,7 +149,6 @@ export default class Game extends Phaser.Scene {
     // temp playgounds
     this.input.keyboard.on('keydown_A', () => {
         this.scene.stop('Game').start('Andi');
-
     });
   }
 
@@ -159,7 +230,32 @@ export default class Game extends Phaser.Scene {
    *  @param {number} dt Time elapsed since last update.
    */
   update(/* t, dt */) {
-    this.map.update();
+    /*
+      game states and transitions
+      0: waiting for next question
+        -> press space
+      1: show question
+        -> buzzer key pressed or time over
+      2: show answer (turn question card)
+        -> confirm if answer was correct
+      3: travel team 1
+        -> click on destination or skip
+      4: travel team 2
+        -> click on destination or skip
+    */
+    switch (this.gameState) {
+      case 0:
+          break;
+      case 1:
+          break;
+      case 2:
+          break;
+      case 3:
+          break;
+      case 4:
+          break;
+    }
+
     for (let i=0; i<this.teams.length; i++) {
       this.teams[i].update();
     }
