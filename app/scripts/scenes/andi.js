@@ -21,10 +21,9 @@ export default class Andi extends Phaser.Scene {
     // this.cameras.main.setBackgroundColor('#FFFFFF');
 
     let puzzle = {
+      qId: 1,
       qText: "There are four girls- Alexis, Becky, Claire and Diana. Alexis is taller than Becky, who is shorter than Diana. Alexis is shorter than Diana and Diana is not the tallest.",
-      qImage: null,
-      aText: null,
-      aImage: null
+      aText: "I am the Backside!"
     };
 
     this.input.keyboard.on('keydown_X', () => {
