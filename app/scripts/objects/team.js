@@ -19,6 +19,15 @@ export default class Team {
     this.token.setScale(0.6, 0.6);
     this.token.setPosition(this.currentCity.x, this.currentCity.y + 10);
 
+    scene.tweens.add({
+        targets: this.token,
+        scale: 0.62,
+        duration: 500,
+        ease: 'Linear',
+        yoyo: -1,
+        repeat: -1
+    })
+
   }
 
   /**
