@@ -18,11 +18,17 @@ export default class Andi extends Phaser.Scene {
    *  @param {object} data Initialization parameters.
    */
   create(/* data */) {
-    this.cameras.main.setBackgroundColor('#FFFFFF');
+    // this.cameras.main.setBackgroundColor('#FFFFFF');
+
+    let puzzle = {
+      qText: "There are four girls- Alexis, Becky, Claire and Diana. Alexis is taller than Becky, who is shorter than Diana. Alexis is shorter than Diana and Diana is not the tallest.",
+      qImage: null,
+      aText: null,
+      aImage: null
+    };
 
     this.input.keyboard.on('keydown_X', () => {
-        this.quizcard = new Quizcard(this);
-        console.log("Placing quizcard");
+        this.quizcard = new Quizcard(this, puzzle);
     });
 
   }
@@ -36,5 +42,10 @@ export default class Andi extends Phaser.Scene {
    *  @param {number} dt Time elapsed since last update.
    */
   update(/* t, dt */) {
+  }
+
+  render() {
+    // this.debug.renderSpriteBounds(this.text);
+    this.debug.cameraInfo(this.game.camera, 32, 32);
   }
 }
