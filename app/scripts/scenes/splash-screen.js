@@ -41,8 +41,16 @@ export default class SplashScreen extends Phaser.Scene {
       this.load.image('Gehirn/Gehirn_links/Gehirn_links_' + i);
       this.load.image('Gehirn/Gehirn_rechts/Gehirn_rechts_' + i);
     }
+    for (let i=0; i<=9; i++) {
+      this.load.image('ecopoints_l_' + i);
+      this.load.image('ecopoints_r_' + i);
+    }
+
     this.load.image('city_point');
     this.load.image('air_point');
+
+    this.load.image('figure_green-11');
+    this.load.image('figure_orange-10');
   }
 
   /**

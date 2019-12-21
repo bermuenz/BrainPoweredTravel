@@ -24,31 +24,68 @@ export default class Game extends Phaser.Scene {
    */
   create(/* data */) {
 
+    this.registerDebugKeyHandlers();
+
+    //  TODO: Replace this content with really cool game code here :)
+    this.map = new Map(this);
+
+    this.createCitiesAndConnections();
+
+    this.teams = [];
+    for (let i=0; i<2; i++) {
+      this.teams.push(new Team(this, i, this.cities["Melbourne"]));
+    }
+
+    // console.log(this.getReachableCities('Melbourne', 3));
+  }
+
+  registerDebugKeyHandlers() {
+
+    this.input.keyboard.on('keydown_V', () => {
+      this.teams[0].brainPoints = Math.max(0, this.teams[0].brainPoints-1);
+    });
 
     this.input.keyboard.on('keydown_B', () => {
-      this.teams[0].brainPoints++;
-      if (this.teams[0].brainPoints > 100) {
-        this.teams[0].brainPoints = 0;
-      }
+      this.teams[0].brainPoints = Math.min(100, this.teams[0].brainPoints+1);
     });
-    
+
+    this.input.keyboard.on('keydown_N', () => {
+      this.teams[1].brainPoints = Math.max(0, this.teams[1].brainPoints-1);
+    });
+
+    this.input.keyboard.on('keydown_M', () => {
+      this.teams[1].brainPoints = Math.min(100, this.teams[1].brainPoints+1);
+    });
+
+    this.input.keyboard.on('keydown_W', () => {
+      this.teams[0].ecoPoints = Math.max(0, this.teams[0].ecoPoints-1);
+    });
+
+    this.input.keyboard.on('keydown_E', () => {
+      this.teams[0].ecoPoints = Math.min(100, this.teams[0].ecoPoints+1);
+    });
+
+    this.input.keyboard.on('keydown_R', () => {
+      this.teams[1].ecoPoints = Math.max(0, this.teams[1].ecoPoints-1);
+    });
+
+    this.input.keyboard.on('keydown_T', () => {
+      this.teams[1].ecoPoints = Math.min(100, this.teams[1].ecoPoints+1);
+    });
+
+
     // temp playgounds
     this.input.keyboard.on('keydown_A', () => {
         this.scene.stop('Game').start('Andi');
 
     });
-
-    //  TODO: Replace this content with really cool game code here :)
-    this.map = new Map(this);
-
-    this.teams = [];
-    for (let i=0; i<2; i++) {
-      this.teams.push(new Team(this, i));
-    }
-
-    this.createCitiesAndConnections();
   }
 
+
+  /**
+   * Parse the topology from the topology.js file and create the City/connection
+   * Game objects
+  **/
   createCitiesAndConnections() {
 
     this.cities = {};
@@ -57,7 +94,6 @@ export default class Game extends Phaser.Scene {
     for (let city of topology.cities) {
       let cityObject = new City(this, city.cityId, city.x, city.y, city.isIntermediatePoint);
       this.cities[city.cityId] = cityObject;
-      this.add.existing(cityObject);
     }
 
     this.connectionLookupTable = {};
@@ -76,9 +112,42 @@ export default class Game extends Phaser.Scene {
       this.connectionLookupTable[connection.end].push(connection.start);
 
       let connectionObject = new Connection(this, this.cities[connection.start], this.cities[connection.end]);
-      this.add.existing(connectionObject);
       this.connections[connection.start + '_' + connection.end] = connectionObject;
     }
+  }
+
+  /**
+   *  Searches for all possible cities a team can travel with the available
+   *  brain points.
+   *
+   *  @protected
+   *  @param {string} startCityId Current city where the team is located
+   *  @param {number} maxDistance Maximum distance the team can travel.
+   *  @return The available cities and the distance to those cities.
+   */
+  getReachableCities(startCityId, maxDistance) {
+    let visitedCities = [startCityId];
+    let currentBacklog = [startCityId];
+    let nextBacklog = [];
+    let reachableCities = [];
+    let currentDistance = 1;
+    while (currentBacklog.length > 0) {
+      let currentCity = currentBacklog.pop();
+      for (let nextCity of this.connectionLookupTable[currentCity]) {
+          if (visitedCities.includes(nextCity)) {
+            continue;
+          }
+          visitedCities.push(nextCity);
+          reachableCities.push([nextCity, currentDistance]);
+          nextBacklog.push(nextCity);
+      }
+      if (currentBacklog.length <= 0 && currentDistance < maxDistance) {
+        currentBacklog = nextBacklog;
+        nextBacklog = [];
+        currentDistance++;
+      }
+    }
+    return reachableCities;
   }
 
   /**

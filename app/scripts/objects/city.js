@@ -14,7 +14,10 @@ export default class City extends Phaser.GameObjects.Sprite {
     this.setPosition(window.innerWidth * (x / 100), window.innerHeight * (y / 100));
     this.setScale(0.5, 0.5);
     this.setOrigin(0.5, 0.5);
-
+    if (isIntermediatePoint) {
+      this.tint = 0xaa3f3f;
+    }
+    scene.add.existing(this);
 
   }
 
