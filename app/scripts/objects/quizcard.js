@@ -48,9 +48,7 @@ export default class Quizcard extends Phaser.GameObjects.Container {
 
 
     this.scene.add.existing(this);
-    this.scene.input.keyboard.on('keydown_F', () => {
-        this.flip();
-    });
+
 
   }
 

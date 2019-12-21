@@ -1,6 +1,6 @@
 import Map from '@/objects/map';
 import Team from '@/objects/team';
-//import Quizcard from '@/objects/quizcard';
+import Quizcard from '@/objects/quizcard';
 import City from '@/objects/city';
 import Connection from '@/objects/connection';
 import Topology from '@/topology';
@@ -157,9 +157,22 @@ export default class Game extends Phaser.Scene {
     });
 
 
-    // temp playgounds
+    // flip riddle
     this.input.keyboard.on('keydown_A', () => {
-        this.scene.stop('Game').start('Andi');
+        // this.scene.stop('Game').start('Andi');
+        let riddle = {
+          qId: 1,
+          qText: "There are four girls- Alexis, Becky, Claire and Diana. Alexis is taller than Becky, who is shorter than Diana. Alexis is shorter than Diana and Diana is not the tallest.",
+          aText: "I am the Backside!"
+        };
+        if (this.quizcard) {
+          this.quizcard.destroy();
+          this.quizcard = null;
+        }
+        else this.quizcard = new Quizcard(this, riddle);
+    });
+    this.input.keyboard.on('keydown_F', () => {
+        this.quizcard.flip();
     });
   }
 
