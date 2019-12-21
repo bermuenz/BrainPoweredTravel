@@ -78,13 +78,13 @@ export default class Game extends Phaser.Scene {
     console.log("starting next question");
     this.gameState = 1;
     this.currentRiddle = this.getRandomRiddle();
-    // TODO show question
-    console.log(this.currentRiddle.qText);
+    // show question
     this.currentRiddle.startTime = new Date().getTime();
+    this.quizcard = new Quizcard(this, this.currentRiddle);
     this.quizTimeout = setTimeout(() => {
       // TODO show "time over" message
       console.log("time over");
-      this.showAnswer();
+      this.showAnswer(false);
     }, this.currentRiddle.duration * 1000);
   }
 
@@ -105,12 +105,12 @@ export default class Game extends Phaser.Scene {
     console.log("team " + teamId + " pressed the buzzer");
     this.currentRiddle.answeringTeam = teamId;
     this.currentRiddle.answerTime = (new Date().getTime() - this.currentRiddle.startTime) / 1000;
-    this.showAnswer();
+    this.showAnswer(true);
   }
 
-  showAnswer() {
+  showAnswer(isAnswered) {
     this.gameState = 2;
-    console.log(this.currentRiddle.aText);
+    this.quizcard.flip(isAnswered);
     // TODO show answer
     // TODO adapt buttons:
     //   - if a team answered -> correct, wrong -> answerConfirmed
