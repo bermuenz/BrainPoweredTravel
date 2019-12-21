@@ -21,7 +21,14 @@ export default class Connection extends Phaser.GameObjects.Line {
     //super(scene, startX, startY, 0, 0, 100, 100, 0xff0000);
     this.setOrigin(0, 0);
     scene.add.existing(this);
+  }
 
+  highlight(isHighlight) {
+    if (isHighlight) {
+      this.setStrokeStyle(1, 0x00ff00, 1);
+    } else {
+      this.setStrokeStyle(1, 0xaa3f3f, 1);
+    }
   }
 
   /**

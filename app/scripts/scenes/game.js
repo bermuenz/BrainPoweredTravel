@@ -31,22 +31,21 @@ export default class Game extends Phaser.Scene {
 
     this.createCitiesAndConnections();
 
-    this.teams = [];
-    for (let i=0; i<2; i++) {
-      this.teams.push(new Team(this, i, this.cities["Melbourne"]));
-    }
-
-
-    this.createCitiesAndConnections();
+    this.teams = [
+      // TODO pre-define start cities
+      // TODO define target cities
+      new Team(this, 0, this.cities["48"]),
+      new Team(this, 1, this.cities["Melbourne"])
+    ];
 
     this.gameState = 0;
+    this.activeTeam = this.teams[1];
 
-    // console.log(this.getReachableCities('Melbourne', 3));
+    this.teams[0].brainPoints = 30;
+    this.teams[1].brainPoints = 60;
 
-    // Todo: Use this code to calculate distances and to move a team
-    // this.teams[0].brainPoints = 5;
-    // let exampleDestination = this.getReachableCities('Melbourne', 3)[2];
-    // this.teams[0].move(this.cities[exampleDestination[0]], exampleDestination[1]);
+    console.log(this.teams[0].highlightValidRoutes());
+    console.log(this.teams[1].highlightValidRoutes());
 
   }
 
@@ -73,7 +72,7 @@ export default class Game extends Phaser.Scene {
   startQuiz() {
     console.log("starting next question");
     // TODO show question and start timer
-    // TODO get next question randomly
+    // TODO get next question randomly and remember id to not select it again
     this.gameState = 1;
     this.currentQuiz = {}; // TODO: select a random quiz riddle
     this.currentQuiz.startTime = new Date().getTime();
@@ -94,21 +93,33 @@ export default class Game extends Phaser.Scene {
   showAnswer() {
     this.gameState = 2;
     // TODO show answer
+    // TODO adapt buttons:
+    //   - if a team answered -> correct, wrong -> answerConfirmed
+    //   - else -> ok -> back to gameState 0
+    //if (this.currentQuiz.answeringTeam != undefined) {
+
+    //} else {
+
+    //}
   }
+
 
   answerConfirmed(correct) {
-    // TODO compute points
+    // TODO balance scoring function
+    let maxPoints = this.currentQuiz.maxPoints; // TODO derive from difficulty
+    let points = Math.round(((this.currentQuiz.duration - this.currentQuiz.answerTime) / this.currentQuiz.duration) * maxPoints);
     if (correct) {
-
+        this.teams[this.currentQuiz.answeringTeam].brainPoints += points;
     } else {
-
+        let otherTeam = (this.currentQuiz.answeringTeam + 1) % 2;
+        this.teams[otherTeam].brainPoints += points / 2;
     }
     this.gameState = 3;
+    // TODO: set this.activeTeam
+
+    // TODO: reduce ecoPoints at end of round
   }
 
-  travel() {
-    // ...?
-  }
 
 
   registerDebugKeyHandlers() {
@@ -187,39 +198,6 @@ export default class Game extends Phaser.Scene {
     }
   }
 
-  /**
-   *  Searches for all possible cities a team can travel with the available
-   *  brain points.
-   *
-   *  @protected
-   *  @param {string} startCityId Current city where the team is located
-   *  @param {number} maxDistance Maximum distance the team can travel.
-   *  @return The available cities and the distance to those cities.
-   */
-  getReachableCities(startCityId, maxDistance) {
-    let visitedCities = [startCityId];
-    let currentBacklog = [startCityId];
-    let nextBacklog = [];
-    let reachableCities = [];
-    let currentDistance = 1;
-    while (currentBacklog.length > 0) {
-      let currentCity = currentBacklog.pop();
-      for (let nextCity of this.connectionLookupTable[currentCity]) {
-          if (visitedCities.includes(nextCity)) {
-            continue;
-          }
-          visitedCities.push(nextCity);
-          reachableCities.push([nextCity, currentDistance]);
-          nextBacklog.push(nextCity);
-      }
-      if (currentBacklog.length <= 0 && currentDistance < maxDistance) {
-        currentBacklog = nextBacklog;
-        nextBacklog = [];
-        currentDistance++;
-      }
-    }
-    return reachableCities;
-  }
 
   /**
    *  Called when a scene is updated. Updates to game logic, physics and game
