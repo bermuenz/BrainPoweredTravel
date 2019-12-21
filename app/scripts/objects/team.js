@@ -1,6 +1,6 @@
 import Token from '@/objects/token';
 import BrainPower from '@/objects/brainpower';
-import EcoFootprint from '@/objects/ecofootprint';
+import EcoFootprint from '@/objects/ecoFootprint';
 
 export default class Team {
 
@@ -21,7 +21,8 @@ export default class Team {
    *
    */
   update() {
-
-
+    this.token.update();
+    this.brainPower.update();
+    this.ecoFootprint.update();
   }
 }
