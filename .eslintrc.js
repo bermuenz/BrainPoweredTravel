@@ -55,5 +55,7 @@ exports.rules = {
   'linebreak-style': ['error', 'unix'],
 
   //  End lines with semicolons
-  'semi': ['error', 'always']
+  'semi': ['error', 'always'],
+
+  "no-console": "off"
 };
