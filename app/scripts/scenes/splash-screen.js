@@ -47,6 +47,9 @@ export default class SplashScreen extends Phaser.Scene {
 
     this.load.image('city_point');
     this.load.image('air_point');
+
+    this.load.image('figure_green-11');
+    this.load.image('figure_orange-10');
   }
 
   /**

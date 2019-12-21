@@ -29,12 +29,12 @@ export default class Game extends Phaser.Scene {
     //  TODO: Replace this content with really cool game code here :)
     this.map = new Map(this);
 
+    this.createCitiesAndConnections();
+
     this.teams = [];
     for (let i=0; i<2; i++) {
-      this.teams.push(new Team(this, i));
+      this.teams.push(new Team(this, i, this.cities["Melbourne"]));
     }
-
-    this.createCitiesAndConnections();
 
     // console.log(this.getReachableCities('Melbourne', 3));
   }
