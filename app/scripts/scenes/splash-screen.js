@@ -35,6 +35,7 @@ export default class SplashScreen extends Phaser.Scene {
 
     //  HINT: Declare all game assets to be loaded here.
     this.load.image('logo');
+    this.load.image('map');
   }
 
   /**
