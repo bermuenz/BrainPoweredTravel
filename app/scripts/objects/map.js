@@ -11,6 +11,8 @@ export default class Map extends Phaser.GameObjects.Image {
     this.setPosition(x, y);
     this.setOrigin(0.5);
     this.setDisplaySize(window.innerWidth, window.innerHeight);
+
+    scene.add.existing(this);
   }
 
   /**
