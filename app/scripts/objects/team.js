@@ -21,7 +21,8 @@ export default class Team {
    *
    */
   update() {
-
-
+    this.token.update();
+    this.brainPower.update();
+    this.ecoFootprint.update();
   }
 }
