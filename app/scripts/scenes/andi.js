@@ -1,3 +1,5 @@
+import Quizcard from '@/objects/quizcard';
+
 export default class Andi extends Phaser.Scene {
   /**
    *  A sample Game scene, displaying the Phaser logo.
@@ -16,7 +18,12 @@ export default class Andi extends Phaser.Scene {
    *  @param {object} data Initialization parameters.
    */
   create(/* data */) {
-    //  TODO: Replace this content with really cool game code here :)
+    this.cameras.main.setBackgroundColor('#FFFFFF');
+
+    this.input.keyboard.on('keydown_X', () => {
+        this.quizcard = new Quizcard(this);
+        console.log("Placing quizcard");
+    });
 
   }
 
