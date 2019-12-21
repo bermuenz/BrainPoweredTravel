@@ -33,7 +33,7 @@ export default class Team {
 
   move(targetCity, distance) {
     return new Promise((resolve, reject) => {
-      this.brainPoints -= distance;
+      this.brainPoints -= distance * 10;
       if (distance == 2) {
         this.ecoPoints += 1;
       } else if (distance == 3) {
@@ -52,6 +52,56 @@ export default class Team {
           onComplete: resolve
       });
     });
+  }
+
+  /**
+   *  Searches for all possible cities a team can travel with the available
+   *  brain points.
+   *  @return The available cities and the distance to those cities.
+   */
+  getReachableCities() {
+
+    let maxDistance = Math.min(4, Math.floor(this.brainPoints / 10));
+    if (maxDistance <= 0) {
+      return [];
+    }
+    if (this.ecoPoints >= 9) {
+      maxDistance = 1;
+    }
+
+
+    let visitedCities = [this.currentCity.cityId];
+    let currentBacklog = [this.currentCity.cityId];
+    let nextBacklog = [];
+    let reachableCities = [];
+    let currentDistance = 1;
+    while (currentBacklog.length > 0) {
+      let currentCity = currentBacklog.pop();
+      for (let nextCity of this.scene.connectionLookupTable[currentCity]) {
+          if (visitedCities.includes(nextCity)) {
+            continue;
+          }
+          visitedCities.push(nextCity);
+          reachableCities.push({cityId: nextCity, distance: currentDistance});
+          nextBacklog.push(nextCity);
+      }
+      if (currentBacklog.length <= 0 && currentDistance < maxDistance) {
+        currentBacklog = nextBacklog;
+        nextBacklog = [];
+        currentDistance++;
+      }
+    }
+    return reachableCities;
+  }
+
+  highlightValidRoutes() {
+    for (let cityId in this.scene.cities) {
+      this.scene.cities[cityId].highlight(false);
+    }
+    let reachableCities = this.getReachableCities();
+    for (let city of reachableCities) {
+      this.scene.cities[city.cityId].highlight(true);
+    }
   }
 
   /**
