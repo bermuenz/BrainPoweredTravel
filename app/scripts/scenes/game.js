@@ -4,6 +4,7 @@ import Team from '@/objects/team';
 import City from '@/objects/city';
 import Connection from '@/objects/connection';
 import Topology from '@/topology';
+import riddles from '@/riddles';
 
 export default class Game extends Phaser.Scene {
   /**
@@ -25,7 +26,6 @@ export default class Game extends Phaser.Scene {
   create(/* data */) {
 
     this.registerKeyHandlers();
-    this.registerDebugKeyHandlers();
 
     this.map = new Map(this);
 
@@ -39,14 +39,19 @@ export default class Game extends Phaser.Scene {
     ];
 
     this.gameState = 0;
-    this.activeTeam = this.teams[1];
+    this.riddlePool = riddles().riddles;
 
+    this.initDebug();
+  }
+
+  initDebug() {
+    this.registerDebugKeyHandlers();
+
+    this.activeTeam = this.teams[1];
     this.teams[0].brainPoints = 30;
     this.teams[1].brainPoints = 60;
 
-    console.log(this.teams[0].highlightValidRoutes());
-    console.log(this.teams[1].highlightValidRoutes());
-
+    this.teams[1].highlightValidRoutes();
   }
 
   registerKeyHandlers() {
@@ -71,32 +76,46 @@ export default class Game extends Phaser.Scene {
 
   startQuiz() {
     console.log("starting next question");
-    // TODO show question and start timer
-    // TODO get next question randomly and remember id to not select it again
     this.gameState = 1;
-    this.currentQuiz = {}; // TODO: select a random quiz riddle
-    this.currentQuiz.startTime = new Date().getTime();
+    this.currentRiddle = this.getRandomRiddle();
+    // TODO show question
+    console.log(this.currentRiddle.qText);
+    this.currentRiddle.startTime = new Date().getTime();
     this.quizTimeout = setTimeout(() => {
       // TODO show "time over" message
+      console.log("time over");
       this.showAnswer();
-    }, this.currentQuiz.duration);
+    }, this.currentRiddle.duration * 1000);
+  }
+
+  getRandomRiddle() {
+    // get next riddle randomly and remove from riddlePool
+    let riddle = this.riddlePool[Math.floor(Math.random() * this.riddlePool.length)];
+    this.riddlePool = this.riddlePool.filter(r => r.dID != riddle.dID);
+    if (this.riddlePool.length == 0) {
+      // all riddles were used -> refill the pool
+      this.riddlePool = riddles().riddles;
+    }
+
+    return riddle;
   }
 
   buzzerPressed(teamId) {
     clearTimeout(this.quizTimeout);
     console.log("team " + teamId + " pressed the buzzer");
-    this.currentQuiz.answeringTeam = teamId;
-    this.currentQuiz.answerTime = (new Date().getTime() - this.currentQuiz.startTime) / 1000;
+    this.currentRiddle.answeringTeam = teamId;
+    this.currentRiddle.answerTime = (new Date().getTime() - this.currentRiddle.startTime) / 1000;
     this.showAnswer();
   }
 
   showAnswer() {
     this.gameState = 2;
+    console.log(this.currentRiddle.aText);
     // TODO show answer
     // TODO adapt buttons:
     //   - if a team answered -> correct, wrong -> answerConfirmed
     //   - else -> ok -> back to gameState 0
-    //if (this.currentQuiz.answeringTeam != undefined) {
+    //if (this.currentRiddle.answeringTeam != undefined) {
 
     //} else {
 
@@ -106,12 +125,12 @@ export default class Game extends Phaser.Scene {
 
   answerConfirmed(correct) {
     // TODO balance scoring function
-    let maxPoints = this.currentQuiz.maxPoints; // TODO derive from difficulty
-    let points = Math.round(((this.currentQuiz.duration - this.currentQuiz.answerTime) / this.currentQuiz.duration) * maxPoints);
+    let maxPoints = this.currentRiddle.maxPoints; // TODO derive from difficulty
+    let points = Math.round(((this.currentRiddle.duration - this.currentRiddle.answerTime) / this.currentRiddle.duration) * maxPoints);
     if (correct) {
-        this.teams[this.currentQuiz.answeringTeam].brainPoints += points;
+        this.teams[this.currentRiddle.answeringTeam].brainPoints += points;
     } else {
-        let otherTeam = (this.currentQuiz.answeringTeam + 1) % 2;
+        let otherTeam = (this.currentRiddle.answeringTeam + 1) % 2;
         this.teams[otherTeam].brainPoints += points / 2;
     }
     this.gameState = 3;
