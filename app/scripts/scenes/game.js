@@ -23,6 +23,12 @@ export default class Game extends Phaser.Scene {
    *  @param {object} data Initialization parameters.
    */
   create(/* data */) {
+
+    // temp playgounds
+    this.input.keyboard.on('keydown_A', () => {
+        this.scene.stop('Game').start('Andi');
+    });
+
     //  TODO: Replace this content with really cool game code here :)
     this.map = new Map(this);
 
