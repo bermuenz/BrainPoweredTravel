@@ -31,6 +31,11 @@ export default class Team {
 
   }
 
+  reduceEcoPoints() {
+    this.ecoPoints = Math.max(0,  this.ecoPoints-1);
+    this.update();
+  }
+
   move(targetCity, distance) {
     return new Promise((resolve, reject) => {
       this.brainPoints -= distance * 10;
@@ -72,7 +77,6 @@ export default class Team {
       maxDistance = 1;
     }
 
-
     let visitedCities = [this.currentCity.cityId];
     let currentBacklog = [this.currentCity.cityId];
     let nextBacklog = [];
@@ -105,6 +109,7 @@ export default class Team {
     for (let city of reachableCities) {
       this.scene.cities[city.cityId].highlight(true);
     }
+    return reachableCities;
   }
 
   /**

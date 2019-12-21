@@ -46,10 +46,14 @@ export default class Quizcard extends Phaser.GameObjects.Container {
 
     this.setSize(bg.width, bg.height);
 
-
     this.scene.add.existing(this);
 
+  }
 
+  getRemainingTime() {
+    let currentTime = new Date().getTime();
+    let elapsedTime = (currentTime - this.riddle.startTime) / 1000;
+    return Math.round(this.riddle.duration - elapsedTime);
   }
 
   flip(isAnswered = false) {
@@ -95,7 +99,7 @@ export default class Quizcard extends Phaser.GameObjects.Container {
    *
    */
   update() {
-
+    //console.log(this.getRemainingTime(), this.computePoints());
   }
 
 

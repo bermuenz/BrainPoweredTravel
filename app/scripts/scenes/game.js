@@ -47,11 +47,11 @@ export default class Game extends Phaser.Scene {
   initDebug() {
     this.registerDebugKeyHandlers();
 
-    this.activeTeam = this.teams[1];
-    this.teams[0].brainPoints = 30;
-    this.teams[1].brainPoints = 60;
+    //this.activeTeam = this.teams[1];
+    //this.teams[0].brainPoints = 30;
+    //this.teams[1].brainPoints = 60;
 
-    this.teams[1].highlightValidRoutes();
+    //this.teams[1].highlightValidRoutes();
   }
 
   registerKeyHandlers() {
@@ -78,6 +78,7 @@ export default class Game extends Phaser.Scene {
     console.log("starting next question");
     this.gameState = 1;
     this.currentRiddle = this.getRandomRiddle();
+    // TODO derive maxPoints from difficulty
     // show question
     this.currentRiddle.startTime = new Date().getTime();
     this.quizcard = new Quizcard(this, this.currentRiddle);
@@ -125,19 +126,40 @@ export default class Game extends Phaser.Scene {
 
   answerConfirmed(correct) {
     // TODO balance scoring function
-    let maxPoints = this.currentRiddle.maxPoints; // TODO derive from difficulty
+    // TODO display points (animation bei Brain Points?)
+    let maxPoints = this.currentRiddle.maxPoints;
+    if (this.currentRiddle.difficulty == "hard") {
+      maxPoints = 50;
+    } else if (this.currentRiddle.difficulty == "easy") {
+      maxPoints = 30;
+    }
     let points = Math.round(((this.currentRiddle.duration - this.currentRiddle.answerTime) / this.currentRiddle.duration) * maxPoints);
     if (correct) {
         this.teams[this.currentRiddle.answeringTeam].brainPoints += points;
     } else {
         let otherTeam = (this.currentRiddle.answeringTeam + 1) % 2;
-        this.teams[otherTeam].brainPoints += points / 2;
+        this.teams[otherTeam].brainPoints += Math.round(points / 2);
     }
     this.gameState = 3;
-    // TODO: set this.activeTeam
 
-    // TODO: reduce ecoPoints at end of round
+    this.activeTeam = this.teams[0];
+    let reachableCities = this.activeTeam.highlightValidRoutes();
+
+
+    // TODO skip travel -> click on current city
+
+    // finish the round
+    this.teams[0].reduceEcoPoints();
+    this.teams[1].reduceEcoPoints();
+    this.activeTeam = null;
+    this.quizcard.destroy();
+    this.quizcard = null;
+    this.gameState = 0;
+    // TODO reset highlights
+
   }
+
+
 
 
 
@@ -175,6 +197,17 @@ export default class Game extends Phaser.Scene {
       this.teams[1].ecoPoints = Math.min(100, this.teams[1].ecoPoints+1);
     });
 
+    this.input.keyboard.on('keydown_C', () => {
+      if (this.gameState == 2) {
+        this.answerConfirmed(true);
+      }
+    });
+
+    this.input.keyboard.on('keydown_I', () => {
+      if (this.gameState == 2) {
+        this.answerConfirmed(false);
+      }
+    });
 
     // flip riddle
     this.input.keyboard.on('keydown_A', () => {
@@ -264,6 +297,10 @@ export default class Game extends Phaser.Scene {
           break;
       case 4:
           break;
+    }
+
+    if (this.quizcard) {
+        this.quizcard.update();
     }
 
     for (let i=0; i<this.teams.length; i++) {

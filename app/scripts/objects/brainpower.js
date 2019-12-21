@@ -5,7 +5,7 @@ export default class BrainPower {
   constructor(scene, team) {
 
     let x, textX;
-    let y = scene.cameras.main.height * 0.2;
+    let y = scene.cameras.main.height * 0.25;
     let textY = 57;
     let texture;
     if (team.teamId == 0) {
