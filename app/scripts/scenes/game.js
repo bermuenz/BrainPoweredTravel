@@ -24,16 +24,7 @@ export default class Game extends Phaser.Scene {
    */
   create(/* data */) {
 
-    this.input.keyboard.on('keydown_B', () => {
-      this.teams[0].brainPoints++;
-      if (this.teams[0].brainPoints > 100) {
-        this.teams[0].brainPoints = 0;
-      }
-    });
-    // temp playgounds
-    this.input.keyboard.on('keydown_A', () => {
-        this.scene.stop('Game').start('Andi');
-    });
+    this.registerDebugKeyHandlers();
 
     //  TODO: Replace this content with really cool game code here :)
     this.map = new Map(this);
@@ -47,6 +38,49 @@ export default class Game extends Phaser.Scene {
 
     // console.log(this.getReachableCities('Melbourne', 3));
   }
+
+  registerDebugKeyHandlers() {
+
+    this.input.keyboard.on('keydown_V', () => {
+      this.teams[0].brainPoints = Math.max(0, this.teams[0].brainPoints-1);
+    });
+
+    this.input.keyboard.on('keydown_B', () => {
+      this.teams[0].brainPoints = Math.min(100, this.teams[0].brainPoints+1);
+    });
+
+    this.input.keyboard.on('keydown_N', () => {
+      this.teams[1].brainPoints = Math.max(0, this.teams[1].brainPoints-1);
+    });
+
+    this.input.keyboard.on('keydown_M', () => {
+      this.teams[1].brainPoints = Math.min(100, this.teams[1].brainPoints+1);
+    });
+
+    this.input.keyboard.on('keydown_W', () => {
+      this.teams[0].ecoPoints = Math.max(0, this.teams[0].ecoPoints-1);
+    });
+
+    this.input.keyboard.on('keydown_E', () => {
+      this.teams[0].ecoPoints = Math.min(100, this.teams[0].ecoPoints+1);
+    });
+
+    this.input.keyboard.on('keydown_R', () => {
+      this.teams[1].ecoPoints = Math.max(0, this.teams[1].ecoPoints-1);
+    });
+
+    this.input.keyboard.on('keydown_T', () => {
+      this.teams[1].ecoPoints = Math.min(100, this.teams[1].ecoPoints+1);
+    });
+
+
+    // temp playgounds
+    this.input.keyboard.on('keydown_A', () => {
+        this.scene.stop('Game').start('Andi');
+
+    });
+  }
+
 
   /**
    * Parse the topology from the topology.js file and create the City/connection
