@@ -36,6 +36,7 @@ export default class SplashScreen extends Phaser.Scene {
     //  HINT: Declare all game assets to be loaded here.
     this.load.image('logo');
     this.load.image('map');
+    this.load.image('quizcard');
     for (let i=0; i<=6; i++) {
       this.load.image('Gehirn/Gehirn_links/Gehirn_links_' + i);
       this.load.image('Gehirn/Gehirn_rechts/Gehirn_rechts_' + i);
@@ -47,6 +48,9 @@ export default class SplashScreen extends Phaser.Scene {
 
     this.load.image('city_point');
     this.load.image('air_point');
+
+    this.load.image('figure_blue-10');
+    this.load.image('figure_yellow-11');
   }
 
   /**

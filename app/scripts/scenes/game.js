@@ -29,16 +29,25 @@ export default class Game extends Phaser.Scene {
 
     this.map = new Map(this);
 
+    this.createCitiesAndConnections();
+
     this.teams = [];
     for (let i=0; i<2; i++) {
-      this.teams.push(new Team(this, i));
+      this.teams.push(new Team(this, i, this.cities["Melbourne"]));
     }
+
 
     this.createCitiesAndConnections();
 
     this.gameState = 0;
 
     // console.log(this.getReachableCities('Melbourne', 3));
+
+    // Todo: Use this code to calculate distances and to move a team
+    // this.teams[0].brainPoints = 5;
+    // let exampleDestination = this.getReachableCities('Melbourne', 3)[2];
+    // this.teams[0].move(this.cities[exampleDestination[0]], exampleDestination[1]);
+
   }
 
   registerKeyHandlers() {
@@ -90,7 +99,7 @@ export default class Game extends Phaser.Scene {
   answerConfirmed(correct) {
     // TODO compute points
     if (correct) {
-      
+
     } else {
 
     }
