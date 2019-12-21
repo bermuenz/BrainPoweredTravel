@@ -4,6 +4,7 @@ import EcoFootprint from '@/objects/ecoFootprint';
 export default class Team {
 
   constructor(scene, teamId, startCity) {
+    this.scene = scene;
     this.teamId = teamId;
     this.brainPoints = 0;
     this.ecoPoints = 0;
@@ -28,6 +29,27 @@ export default class Team {
         repeat: -1
     });
 
+  }
+
+  move(targetCity, distance) {
+
+    this.brainPoints -= distance;
+    if (distance == 2) {
+      this.ecoPoints += 1;
+    } else if (distance == 3) {
+      this.ecoPoints += 3;
+    } else if (distance == 4) {
+      this.ecoPoints += 5;
+    }
+
+    this.currentCity = targetCity;
+    this.scene.tweens.add({
+        targets: this.token,
+        x: this.currentCity.x,
+        y: this.currentCity.y + 3,
+        duration: 1000,
+        ease: 'Quadratic'
+    })
   }
 
   /**

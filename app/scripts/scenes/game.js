@@ -36,7 +36,10 @@ export default class Game extends Phaser.Scene {
       this.teams.push(new Team(this, i, this.cities["Melbourne"]));
     }
 
-    // console.log(this.getReachableCities('Melbourne', 3));
+    // Todo: Use this code to calculate distances and to move a team
+    // this.teams[0].brainPoints = 5;
+    // let exampleDestination = this.getReachableCities('Melbourne', 3)[2];
+    // this.teams[0].move(this.cities[exampleDestination[0]], exampleDestination[1]);
   }
 
   registerDebugKeyHandlers() {
