@@ -1,9 +1,7 @@
 import Team from '@/objects/team';
 
 export default class BrainPower {
-  /**
-   *  @extends Phaser.GameObjects.Container
-   */
+
   constructor(scene, team) {
 
     let x, textX;
