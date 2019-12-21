@@ -39,23 +39,17 @@ exports.extends = 'eslint:recommended';
 
 exports.rules = {
   // Indent code with 2 spaces
-  'indent': ['error', 2],
+  'indent': "off",
 
   // Prefer single quotes for strings and occasionally template literals
-  'quotes': [
-    'error',
-    'single',
-    {
-      avoidEscape: true,
-      allowTemplateLiterals: true
-    }
-  ],
+  'quotes': "off",
 
   //  Favor Unix-style line endings
-  'linebreak-style': ['error', 'unix'],
+  'linebreak-style': "off",
 
   //  End lines with semicolons
   'semi': ['error', 'always'],
 
-  "no-console": "off"
+  "no-console": "off",
+  "no-unused-vars": "off"
 };
