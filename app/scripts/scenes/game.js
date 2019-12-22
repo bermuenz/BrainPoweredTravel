@@ -55,7 +55,19 @@ export default class Game extends Phaser.Scene {
 
     this.createMessageBox();
 
+    this.initSounds();
+
     this.initDebug();
+  }
+
+  initSounds() {
+      this.sound.add('bicycle');
+      this.sound.add('train');
+      this.sound.add('car');
+      this.sound.add('plane');
+      this.sound.add('correct');
+      this.sound.add('wrong');
+      this.sound.add('winner');
   }
 
   initDebug() {
