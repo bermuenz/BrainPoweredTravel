@@ -17,6 +17,10 @@ export default class City extends Phaser.GameObjects.Sprite {
     if (isIntermediatePoint) {
       this.tint = 0xaa3f3f;
     }
+
+    this.transportSprite= this.scene.add.sprite(0, 0, "transport/Transport1");
+    this.transportSprite.setVisible(false);
+
     scene.add.existing(this);
 
     this.setInteractive();
@@ -41,12 +45,15 @@ export default class City extends Phaser.GameObjects.Sprite {
     });
 
     this.on('pointerover', (event, gameObject) => {
+      console.log("test");
       if (this.scene.gameState == 3 || this.scene.gameState == 4) {
         let reachableCities = this.scene.activeTeam.getReachableCities();
+        console.log(reachableCities);
         let reachableCity = reachableCities.find(c => c.cityId == this.cityId);
         if (reachableCity) {
           // reachableCity.distance
           // TODO display according transport vehicle
+          this.showTransport(reachableCity.distance);
           this.unhighlightAllConnections();
           let connections = this.getPath(this.scene.activeTeam.currentCity);
           for (let connection of connections) {
@@ -57,8 +64,45 @@ export default class City extends Phaser.GameObjects.Sprite {
     });
     this.on('pointerout', (event, gameObject) => {
       this.unhighlightAllConnections();
+      this.setTransInvisible();
     });
   }
+
+  showTransport(distance) {
+    console.log(distance);
+    switch (distance) {
+      case 1: {
+        this.transportSprite.setTexture("transport/Transport1");
+        break;
+      }
+      case 2: {
+        this.transportSprite.setTexture("transport/Transport2");
+        break;
+      }
+      case 3: {
+        this.transportSprite.setTexture("transport/Transport3");
+        break;
+      }
+      case 4: {
+        this.transportSprite.setTexture("transport/Transport4");
+        break;
+      }
+    }
+
+    if (this.scene.gameState == 3) {
+      this.transportSprite.setX(window.innerWidth * 0.1);
+      this.transportSprite.setY(window.innerHeight * 0.35);
+    }
+    else if ( this.scene.gameState == 4) {
+      this.transportSprite.setX(window.innerWidth * 0.9);
+      this.transportSprite.setY(window.innerHeight * 0.35);
+    }
+      this.transportSprite.setVisible(true);
+    }
+
+    setTransInvisible(){
+      this.transportSprite.setVisible(false);
+    }
 
   unhighlightAllConnections() {
     for (let connectionKey in this.scene.connections) {
