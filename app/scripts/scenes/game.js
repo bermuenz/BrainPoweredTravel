@@ -296,7 +296,7 @@ export default class Game extends Phaser.Scene {
           return {
             start: startCity,
             end: destCity
-          }
+          };
         }
       }
       count++;
