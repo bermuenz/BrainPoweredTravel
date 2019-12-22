@@ -36,7 +36,7 @@ export default class Game extends Phaser.Scene {
     var txt=this.add.text(1170, 67, "Team 2", {font: "32px Lucida Calligraphy", fill: "#0d67ff"});
     txt.setShadow(5,5,'#000000',50,true,true);
 
-    let routeDistance = 10;
+    let routeDistance = 8;
     let route1 = this.randomRoute(routeDistance);
     let route2 = this.randomRoute(routeDistance);
 

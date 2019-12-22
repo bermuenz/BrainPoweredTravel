@@ -70,6 +70,7 @@ export default class City extends Phaser.GameObjects.Sprite {
   getPath(targetCity) {
     // TODO return all connection objects of the shortest path between the 2 points
     let lookup = this.scene.connectionLookupTable;
+    return [];
   }
 
   highlight(isHighlight) {
