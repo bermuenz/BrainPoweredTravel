@@ -54,6 +54,21 @@ export default class Team {
       }
 
       this.currentCity = targetCity;
+      switch (distance) {
+        case 1:
+          this.sound.play('bicycle');
+          break;
+        case 2:
+          this.sound.play('train');
+          break;
+        case 3:
+          this.sound.play('car');
+          break;
+        case 4:
+          this.sound.play('plane');
+          break;
+      }
+
       let moveTween = this.scene.tweens.add({
           targets: this.token,
           x: this.currentCity.x,

@@ -65,9 +65,12 @@ export default class Game extends Phaser.Scene {
       this.sound.add('train');
       this.sound.add('car');
       this.sound.add('plane');
+      this.sound.add('buzzer');
       this.sound.add('correct');
       this.sound.add('wrong');
       this.sound.add('winner');
+      this.backgroundMusic = this.sound.add('music');
+      this.backgroundMusic.play({loop: true});
   }
 
   initDebug() {
@@ -104,6 +107,7 @@ export default class Game extends Phaser.Scene {
 
   startQuiz() {
     console.log("starting next question");
+    this.sound.play('start');
     this.updateGameState(1);
     this.currentRiddle = this.getRandomRiddle();
     // show question
@@ -130,6 +134,7 @@ export default class Game extends Phaser.Scene {
 
   buzzerPressed(teamId) {
     clearTimeout(this.quizTimeout);
+    this.sound.play('buzzer');
     console.log("team " + teamId + " pressed the buzzer");
     this.currentRiddle.answeringTeam = teamId;
     this.currentRiddle.answerTime = (new Date().getTime() - this.currentRiddle.startTime) / 1000;
@@ -153,6 +158,11 @@ export default class Game extends Phaser.Scene {
   answerConfirmed(correct) {
     // TODO balance scoring function
     // TODO display points (animation bei Brain Points?)
+    if (correct) {
+      this.sound.play('correct');
+    } else {
+      this.sound.play('wrong');
+    }
     let maxPoints = this.currentRiddle.maxPoints;
     if (this.currentRiddle.difficulty == "hard") {
       maxPoints = 50;
@@ -491,6 +501,7 @@ export default class Game extends Phaser.Scene {
 
   showWinnerScreen(teamId) {
     console.log("TEAM " + teamId + " is the winner!");
+    this.backgroundMusic.stop();
     this.sound.play("winner");
     let transparentBg = new Phaser.GameObjects.Image(this, 0, 0, 'blackbackground');
     transparentBg.setAlpha(0.7);

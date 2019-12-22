@@ -76,14 +76,17 @@ export default class SplashScreen extends Phaser.Scene {
     this.load.image('Winner1');
     this.load.image('Winner2');
     this.load.image('start');
+
     this.load.audio('bicycle', 'sounds/bicycle.wav');
     this.load.audio('train', 'sounds/train.mp3');
     this.load.audio('car', 'sounds/car.wav');
-    this.load.audio('plane', 'sounds/plain.wav');
+    this.load.audio('plane', 'sounds/plane.wav');
+    this.load.audio('start', 'sounds/start.wav');
+    this.load.audio('buzzer', 'sounds/buzzer.mp3');
     this.load.audio('correct', 'sounds/correct.wav');
     this.load.audio('wrong', 'sounds/wrong.mp3');
-    this.load.audio('winner', 'sounds/winner.wav');
-
+    this.load.audio('winner', 'sounds/winner.mp3');
+    this.load.audio('music', 'sounds/music1.mp3');
   }
 
   /**
