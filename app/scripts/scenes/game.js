@@ -31,10 +31,14 @@ export default class Game extends Phaser.Scene {
 
     this.createCitiesAndConnections();
 
-    var text=this.add.text(80, 67, "Team 1", {font: "32px Lucida Calligraphy", fill: "#fffc07"});
-    text.setShadow(5,5,'#000000',50,true,true);
-    var txt=this.add.text(1170, 67, "Team 2", {font: "32px Lucida Calligraphy", fill: "#0d67ff"});
-    txt.setShadow(5,5,'#000000',50,true,true);
+    var team1Label=this.add.text(80, 67, "Team 1", {font: "32px Lucida Calligraphy", fill: "#fffc07"});
+    team1Label.setShadow(5,5,'#000000',40,true,true);
+    team1Label.setOrigin(0.5, 1);
+    team1Label.setPosition(window.innerWidth * 0.1, window.innerHeight * 0.15);
+    var team2Label=this.add.text(1170, 67, "Team 2", {font: "32px Lucida Calligraphy", fill: "#0d67ff"});
+    team2Label.setShadow(5,5,'#000000',50,true,true);
+    team2Label.setOrigin(0.5, 1);
+    team2Label.setPosition(window.innerWidth * 0.9, window.innerHeight * 0.15);
 
     let routeDistance = 8;
     let route1 = this.randomRoute(routeDistance);
@@ -48,6 +52,8 @@ export default class Game extends Phaser.Scene {
     this.gameState = 0;
 
     this.riddlePool = riddles().riddles;
+
+    this.createMessageBox();
 
     this.initDebug();
   }
@@ -365,6 +371,7 @@ export default class Game extends Phaser.Scene {
       case 4:
           break;
     }
+    this.updateMessageBoxText();
 
     if (this.quizcard) {
         this.quizcard.update();
@@ -372,6 +379,40 @@ export default class Game extends Phaser.Scene {
 
     for (let i=0; i<this.teams.length; i++) {
       this.teams[i].update();
+    }
+  }
+
+  createMessageBox() {
+    this.messageBox = this.add.text(0, 0, "Press [space] for the next riddle.", {font: "32px Lucida Calligraphy", fill: "#aa3f3f"});
+    //this.messageBox.setShadow(5,5,'#000000',50,true,true);
+    this.messageBox.setOrigin(0.5, 1);
+    this.messageBox.setPosition(window.innerWidth * 0.5, window.innerHeight * 0.95);
+
+  }
+
+  updateMessageBoxText() {
+    // End method if messageBox is not yet defined
+    console.log(this.messageBox);
+    if (!this.messageBox) {
+      return;
+    }
+
+    switch (this.gameState) {
+      case 0:
+          this.messageBox.setText("Press [space] for the next riddle.");
+          break;
+      case 1:
+          this.messageBox.setText("Team 1: Press [1]                 Team 2: Press [0]");
+          break;
+      case 2:
+          this.messageBox.setText("");
+          break;
+      case 3:
+          this.messageBox.setText("Team 1, it's your turn!");
+          break;
+      case 4:
+          this.messageBox.setText("Team 2, it's your turn!");
+          break;
     }
   }
 }
