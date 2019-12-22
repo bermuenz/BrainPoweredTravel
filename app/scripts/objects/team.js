@@ -104,18 +104,24 @@ export default class Team {
 
   reactToGameStateChange() {
     if (this.teamId == 0 && this.scene.gameState == 3) {
+      if (this.tokenTween) {
+        this.tokenTween.stop();
+      }
       this.tokenTween = this.scene.tweens.add({
           targets: this.token,
-          scale: 0.75,
+          scale: 0.8,
           duration: 500,
           ease: 'Linear',
           yoyo: -1,
           repeat: -1
       });
     } else if (this.teamId == 1 && this.scene.gameState == 4) {
+      if (this.tokenTween) {
+        this.tokenTween.stop();
+      }
       this.tokenTween = this.scene.tweens.add({
           targets: this.token,
-          scale: 0.75,
+          scale: 0.8,
           duration: 500,
           ease: 'Linear',
           yoyo: -1,
@@ -125,6 +131,14 @@ export default class Team {
       if (this.tokenTween) {
         this.tokenTween.stop();
       }
+      this.tokenTween = this.scene.tweens.add({
+        targets: this.token,
+        scale: 0.7,
+        duration: 1000,
+        ease: 'Linear',
+        yoyo: -1,
+        repeat: -1
+      });
     }
   }
 
