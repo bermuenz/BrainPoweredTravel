@@ -31,6 +31,12 @@ export default class Game extends Phaser.Scene {
 
     this.createCitiesAndConnections();
 
+    var text=this.add.text(80, 67, "Team 1", {font: "32px Lucida Calligraphy", fill: "#fffc07"});
+    text.setShadow(5,5,'#000000',50,true,true);
+    var txt=this.add.text(1170, 67, "Team 2", {font: "32px Lucida Calligraphy", fill: "#0d67ff"});
+    txt.setShadow(5,5,'#000000',50,true,true);
+
+
     this.teams = [
       // TODO pre-define start cities
       // TODO define target cities
