@@ -353,6 +353,10 @@ export default class Game extends Phaser.Scene {
     return reachableCities;
   }
 
+  getShortestPathBetweenCities(startCity, targetCity) {
+
+  }
+
   /**
    *  Called when a scene is updated. Updates to game logic, physics and game
    *  objects are handled here.
