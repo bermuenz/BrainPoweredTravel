@@ -52,7 +52,7 @@ export default class Team {
           targets: this.token,
           x: this.currentCity.x,
           y: this.currentCity.y + 3,
-          duration: 1000,
+          duration: distance * 1000,
           ease: 'Quadratic',
           onComplete: () => {
             this.scene.tweens.remove(moveTween);

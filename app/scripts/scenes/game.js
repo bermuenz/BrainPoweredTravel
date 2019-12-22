@@ -140,26 +140,40 @@ export default class Game extends Phaser.Scene {
         let otherTeam = (this.currentRiddle.answeringTeam + 1) % 2;
         this.teams[otherTeam].brainPoints += Math.round(points / 2);
     }
+
+    this.quizcard.destroy();
+    this.quizcard = null;
     this.gameState = 3;
 
     this.activeTeam = this.teams[0];
     let reachableCities = this.activeTeam.highlightValidRoutes();
-
+    if (reachableCities.length == 0) {
+      this.team1Finished();
+    }
 
     // TODO skip travel -> click on current city
 
+  }
+
+  team1Finished() {
+    this.activeTeam = this.teams[1];
+    let reachableCities = this.activeTeam.highlightValidRoutes();
+    if (reachableCities.length == 0) {
+      this.team2Finished();
+    }
+  }
+
+  team2Finished() {
     // finish the round
     this.teams[0].reduceEcoPoints();
     this.teams[1].reduceEcoPoints();
     this.activeTeam = null;
-    this.quizcard.destroy();
-    this.quizcard = null;
     this.gameState = 0;
-    // TODO reset highlights
-
+    // reset highlights
+    for (let cityId in this.cities) {
+      this.cities[cityId].highlight(false);
+    }
   }
-
-
 
 
 
