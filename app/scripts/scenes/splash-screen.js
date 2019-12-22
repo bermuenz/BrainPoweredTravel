@@ -13,14 +13,13 @@ export default class SplashScreen extends Phaser.Scene {
       //  Splash screen and progress bar textures.
       pack: {
         files: [{
-          key: 'splash-screen',
-          type: 'image'
-        }, {
-          key: 'progress-bar',
+          key: 'start',
           type: 'image'
         }]
       }
     });
+
+
   }
 
   /**
@@ -31,7 +30,6 @@ export default class SplashScreen extends Phaser.Scene {
   preload() {
     //  Display cover and progress bar textures.
     this.showCover();
-    this.showProgressBar();
 
     //  HINT: Declare all game assets to be loaded here.
     this.load.image('logo');
@@ -61,18 +59,31 @@ export default class SplashScreen extends Phaser.Scene {
     this.load.image('riddles/q5');
     this.load.image('riddles/q30');
     this.load.image('riddles/q31');
-    this.load.image('transport/bikebicycle');
+    this.load.image('transport/bicycle');
     this.load.image('transport/airplane');
     this.load.image('transport/car');
     this.load.image('transport/paddleboat');
     this.load.image('transport/sailboat');
     this.load.image('transport/ship');
     this.load.image('transport/train');
+    this.load.image('transport/Transport1');
+    this.load.image('transport/Transport2');
+    this.load.image('transport/Transport3');
+    this.load.image('transport/Transport4');
     this.load.image('destinationBlue');
     this.load.image('destinationYellow');
     this.load.image('blackbackground');
     this.load.image('Winner1');
     this.load.image('Winner2');
+    this.load.image('start');
+    this.load.audio('bicycle', 'sounds/bicycle.wav');
+    this.load.audio('train', 'sounds/train.mp3');
+    this.load.audio('car', 'sounds/car.wav');
+    this.load.audio('plane', 'sounds/plain.wav');
+    this.load.audio('correct', 'sounds/correct.wav');
+    this.load.audio('wrong', 'sounds/wrong.mp3');
+    this.load.audio('winner', 'sounds/winner.wav');
+
   }
 
   /**
@@ -82,8 +93,25 @@ export default class SplashScreen extends Phaser.Scene {
    *  @protected
    */
   create() {
-    //  We have nothing left to do here. Start the next scene.
-    this.scene.start('Game');
+
+    this.messageBox = this.add.text(0, 0, "Press [space] to start game.", {font: "48px Lucida Calligraphy", fill: "#aa3f3f"});
+    //this.messageBox.setShadow(5,5,'#000000',50,true,true);
+    this.messageBox.setOrigin(0.5, 1);
+    this.messageBox.setPosition(this.cameras.main.width * 0.5, this.cameras.main.height * 0.9);
+
+    this.tweens.add({
+      targets: this.messageBox,
+      scale: 1.2,
+      ease: 'Quadratic',
+      yoyo: -1,
+      repeat: -1
+    });
+
+    // Start the game on Space press
+    this.input.keyboard.on('keydown_SPACE', () => {
+      this.scene.start('Game');
+    });
+
   }
 
   //  ------------------------------------------------------------------------
@@ -94,7 +122,16 @@ export default class SplashScreen extends Phaser.Scene {
    *  @private
    */
   showCover() {
-    this.add.image(0, 0, 'splash-screen').setOrigin(0);
+
+    const x = this.cameras.main.width / 2;
+    const y = this.cameras.main.height / 2;
+
+    let splashScreen = new Phaser.GameObjects.Image(this, 0, 0, 'start');
+    splashScreen.setPosition(x, y);
+    splashScreen.setOrigin(0.5);
+    splashScreen.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
+    this.add.existing(splashScreen);
+
   }
 
   /**
