@@ -45,10 +45,8 @@ export default class City extends Phaser.GameObjects.Sprite {
     });
 
     this.on('pointerover', (event, gameObject) => {
-      console.log("test");
       if (this.scene.gameState == 3 || this.scene.gameState == 4) {
         let reachableCities = this.scene.activeTeam.getReachableCities();
-        console.log(reachableCities);
         let reachableCity = reachableCities.find(c => c.cityId == this.cityId);
         if (reachableCity) {
           // reachableCity.distance
@@ -69,35 +67,40 @@ export default class City extends Phaser.GameObjects.Sprite {
   }
 
   showTransport(distance) {
-    console.log(distance);
+    let bool=true;
     switch (distance) {
       case 1: {
         this.transportSprite.setTexture("transport/Transport1");
+        this.transportSprite.setScale(0.25,0.25);
         break;
       }
       case 2: {
         this.transportSprite.setTexture("transport/Transport2");
+        this.transportSprite.setScale(0.2,0.2);
         break;
       }
       case 3: {
         this.transportSprite.setTexture("transport/Transport3");
+        this.transportSprite.setScale(0.15,0.15);
         break;
       }
       case 4: {
         this.transportSprite.setTexture("transport/Transport4");
+        this.transportSprite.setScale(0.20,0.20);
         break;
       }
+      default: bool =false;
     }
 
     if (this.scene.gameState == 3) {
-      this.transportSprite.setX(window.innerWidth * 0.1);
-      this.transportSprite.setY(window.innerHeight * 0.35);
+      this.transportSprite.setX(window.innerWidth * 0.15);
+      this.transportSprite.setY(window.innerHeight * 0.45);
     }
     else if ( this.scene.gameState == 4) {
-      this.transportSprite.setX(window.innerWidth * 0.9);
-      this.transportSprite.setY(window.innerHeight * 0.35);
+      this.transportSprite.setX(window.innerWidth * 0.85);
+      this.transportSprite.setY(window.innerHeight * 0.45);
     }
-      this.transportSprite.setVisible(true);
+      this.transportSprite.setVisible(bool);
     }
 
     setTransInvisible(){
