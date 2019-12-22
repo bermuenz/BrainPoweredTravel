@@ -70,6 +70,9 @@ export default class SplashScreen extends Phaser.Scene {
     this.load.image('transport/train');
     this.load.image('destinationBlue');
     this.load.image('destinationYellow');
+    this.load.image('blackbackground');
+    this.load.image('Winner1');
+    this.load.image('Winner2');
   }
 
   /**
