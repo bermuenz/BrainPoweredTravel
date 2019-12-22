@@ -125,27 +125,50 @@ export default class Quizcard extends Phaser.GameObjects.Container {
 
     if (ease && this.img) {
       let origScale = this.img.scaleX;
-      this.img.setScale(0, this.img.scaleY);
-      let easin = this.scene.tweens.add({
-        targets: this.img,
-        scaleX: origScale,
-        ease: 'Linear',
-        duration: 300,
-        onComplete: () => {
-          this.scene.tweens.remove(easin);
-        }
-      });
+      this.easeInObject(this.img, origScale);
     }
   }
 
-  createCardBack() {
-    this.removeObjects(this.list.filter(x => x !== this.bg));
+  easeInObject(obj, maxScale, easeSpeed = 300) {
+    obj.setScale(0, maxScale);
+    let easin = this.scene.tweens.add({
+      targets: obj,
+      scaleX: maxScale,
+      ease: 'Linear',
+      duration: easeSpeed,
+      onComplete: () => {
+        this.scene.tweens.remove(easin);
+      }
+    });
+  }
+
+  createConfirm() {
+    this.removeObjects(this.getAll().filter(x => x !== this.bg));
     let bgCenterX = this.bg.getCenter().x;
     let bgCenterY = this.bg.getCenter().y;
-    let img = null;
+    let displayText = `Team ${this.riddle.answeringTeam+1} - your time to shine!\nPress Space to continue.`;
+    this.text = this.scene.add.text(bgCenterX, bgCenterY, displayText, this.qaStyle);
+    // this.text.width = this.bg.width;
+    // this.text.align = 'center';
+    this.text.setOrigin(0.5,0.5);
+    this.add(this.text);
+    this.easeInObject(this.text, 1.0, 600);
+    // let img = null;
+    // img = "riddles/a" + this.riddle.dID;
+    // let xPos = this.img ? this.img.x : bgCenterX;
+    // let yPos = this.img ? this.img.y : bgCenterY;
+    // this.placeImg(img, xPos, yPos, true);
+  }
+
+  createCardBack() {
+    this.removeObjects(this.getAll().filter(x => x !== this.bg));
+    let bgCenterX = this.bg.getCenter().x;
+    let bgCenterY = this.bg.getCenter().y;
     let currentY = this.bg.getCenter().y - this.bg.height/2 - this.lineGap;
-    this.text = this.scene.add.text(bgCenterX, currentY + this.lineGap * 0.7, this.riddle.qText, this.qaStyle);
-    this.text.setText(this.riddle.aText);
+    this.text = this.scene.add.text(bgCenterX, bgCenterY, this.riddle.aText, this.qaStyle);
+    this.text.setOrigin(0.5,0.5);
+    this.add(this.text);
+    let img = null;
     img = "riddles/a" + this.riddle.dID;
     let xPos = this.img ? this.img.x : bgCenterX;
     let yPos = this.img ? this.img.y : bgCenterY;
@@ -191,14 +214,22 @@ export default class Quizcard extends Phaser.GameObjects.Container {
   removeObjects(objs) {
     let idxs = [];
     for (let o of objs) {
-      let tmp = o;
+      // console.log(o);
       this.remove(o);
       o.destroy();
       o = null;
     }
+    // this.list = this.list.filter(x => objs.includes(x));
+    // console.log(this.getAll());
   }
 
   flip(isAnswered = false) {
+
+    if (!isAnswered) {
+      this.scene.team2Finished();
+      // TODO
+      return;
+    }
 
     // this.removeObjects([this.difficultyText, this.timeRemainingTxt]);
     let duration = 300;
@@ -212,14 +243,6 @@ export default class Quizcard extends Phaser.GameObjects.Container {
           repeat: 0,
           yoyo: false,
           onComplete: () => {
-
-            // decide to create front/Back
-            if (this.text.text === this.riddle.qText) {
-              this.createCardBack();
-            } else {
-              this.createCardFront();
-            }
-
             this.scene.tweens.remove(flipA);
             let flipB = this.scene.tweens.add({
                 targets: obj,
@@ -236,8 +259,27 @@ export default class Quizcard extends Phaser.GameObjects.Container {
           }
       });
     }
+
+    let cTween = this.scene.tweens.add({
+      targets: this,
+      ease: 'Linear',
+      duration: duration,
+      onComplete: () => {
+        // decide to create front/Back
+        if (this.text.text === this.riddle.qText) {
+          this.createConfirm();
+          // this.createCardBack();
+        } else {
+          this.createCardFront();
+        }
+        this.scene.tweens.remove(cTween);
+
+      }
+    });
+
   }
 
+// executed for all objects
   onFlipComplete(obj) {
 
   }
