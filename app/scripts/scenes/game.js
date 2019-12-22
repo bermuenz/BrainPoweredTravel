@@ -74,12 +74,12 @@ export default class Game extends Phaser.Scene {
           this.startQuiz();
         }
       });
-      this.input.keyboard.on('keydown_Q', () => {
+      this.input.keyboard.on('keydown_ONE', () => {
         if (this.gameState == 1) {
           this.buzzerPressed(0);
         }
       });
-      this.input.keyboard.on('keydown_P', () => {
+      this.input.keyboard.on('keydown_ZERO', () => {
         if (this.gameState == 1) {
           this.buzzerPressed(1);
         }
@@ -126,7 +126,6 @@ export default class Game extends Phaser.Scene {
   showAnswer(isAnswered) {
     this.gameState = 2;
     this.quizcard.flip(isAnswered);
-    // TODO show answer
     // TODO adapt buttons:
     //   - if a team answered -> correct, wrong -> answerConfirmed
     //   - else -> ok -> back to gameState 0
