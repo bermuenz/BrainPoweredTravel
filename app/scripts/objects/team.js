@@ -56,16 +56,16 @@ export default class Team {
       this.currentCity = targetCity;
       switch (distance) {
         case 1:
-          this.sound.play('bicycle');
+          this.scene.sound.play('bicycle');
           break;
         case 2:
-          this.sound.play('train');
+          this.scene.sound.play('train');
           break;
         case 3:
-          this.sound.play('car');
+          this.scene.sound.play('car');
           break;
         case 4:
-          this.sound.play('plane');
+          this.scene.sound.play('plane');
           break;
       }
 
