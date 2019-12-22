@@ -21,6 +21,7 @@ export default class City extends Phaser.GameObjects.Sprite {
 
     this.setInteractive();
     this.on('pointerup', (event) => {
+      console.log(this.cityId);
       if (this.scene.gameState == 3 || this.scene.gameState == 4) {
         let reachableCities = this.scene.activeTeam.getReachableCities();
         let reachableCity = reachableCities.find(c => c.cityId == this.cityId);
@@ -60,6 +61,11 @@ export default class City extends Phaser.GameObjects.Sprite {
         this.clearTint();
       }
     }
+  }
+
+  // TODO mark with a dedicated sprite
+  markDestination(color) {
+    this.setTint(color);
   }
 
   /**

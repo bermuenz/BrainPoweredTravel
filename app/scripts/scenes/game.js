@@ -31,11 +31,13 @@ export default class Game extends Phaser.Scene {
 
     this.createCitiesAndConnections();
 
+    let routeDistance = 10;
+    let route1 = this.randomRoute(routeDistance);
+    let route2 = this.randomRoute(routeDistance);
+
     this.teams = [
-      // TODO pre-define start cities
-      // TODO define target cities
-      new Team(this, 0, this.cities["48"]),
-      new Team(this, 1, this.cities["Melbourne"])
+      new Team(this, 0, route1.start, route1.end),
+      new Team(this, 1, route2.start, route2.end)
     ];
 
     this.gameState = 0;
@@ -275,6 +277,52 @@ export default class Game extends Phaser.Scene {
     }
   }
 
+  randomRoute(routeDistance) {
+    let count = 0;
+    while (count < 100) {
+      let cityIds = Object.keys(this.cities);
+      let startCity = this.cities[cityIds[Math.floor(Math.random() * cityIds.length)]];
+      let destCityIds = this.getReachableCities(startCity, routeDistance).filter(c => c.distance == routeDistance);
+      if (destCityIds.length > 0) {
+        let destCity =  this.cities[destCityIds[Math.floor(Math.random() * destCityIds.length)].cityId];
+        if (!startCity.isIntermediatePoint && !destCity.isIntermediatePoint) {
+          return {
+            start: startCity,
+            end: destCity
+          }
+        }
+      }
+      count++;
+    }
+    console.error("no route found with distance " + routeDistance);
+  }
+
+
+
+  getReachableCities(startCity, maxDistance) {
+    let visitedCities = [startCity.cityId];
+    let currentBacklog = [startCity.cityId];
+    let nextBacklog = [];
+    let reachableCities = [{cityId: startCity.cityId, distance: 0}]; // click on the current city means skip travelling turn
+    let currentDistance = 1;
+    while (currentBacklog.length > 0) {
+      let currentCity = currentBacklog.pop();
+      for (let nextCity of this.connectionLookupTable[currentCity]) {
+          if (visitedCities.includes(nextCity)) {
+            continue;
+          }
+          visitedCities.push(nextCity);
+          reachableCities.push({cityId: nextCity, distance: currentDistance});
+          nextBacklog.push(nextCity);
+      }
+      if (currentBacklog.length <= 0 && currentDistance < maxDistance) {
+        currentBacklog = nextBacklog;
+        nextBacklog = [];
+        currentDistance++;
+      }
+    }
+    return reachableCities;
+  }
 
   /**
    *  Called when a scene is updated. Updates to game logic, physics and game
