@@ -10,17 +10,19 @@ export default class Quizcard extends Phaser.GameObjects.Container {
     this.riddle = riddle;
     this.lineGap = 65;
     this.middleOffset = 100;
+    this.multiChoiceMap = {0: 'A', 1: 'D', 2: 'C', 3: 'B'};
 
     // this.riddle = {
     //   'dID' : '31',
     //   'qText' : 'How many pieces are on a chessboard at the beginning of a game?',
     //   'qOptions' : ['32','28', '34','30'],
     //   'aText' : '32: Each opponent has 1 king, 1 queen, 2 rooks, 2 bishops, 2 knights, and 8 pawns.',
-    //   'duration' : '120',
+    //   'duration' : '10',
     //   'difficulty' : 'hard',
     //   'maxPoints' : '50',
     //   'startTime': new Date()
     // };
+
 
     const x = this.scene.cameras.main.width / 2;
     const y = this.scene.cameras.main.height / 2;
@@ -76,7 +78,7 @@ export default class Quizcard extends Phaser.GameObjects.Container {
         let x = bgCenterX + (i%2 === 0 ? -this.middleOffset : this.middleOffset);
         let y = currentY + (i%3 === 0 ? 0: (this.lineGap * 0.8));
         // currentY += scoreOffset.y;
-        this.optTxt = this.scene.add.text(x, y, i +": " + this.riddle['qOptions'][i], this.qaStyle);
+        this.optTxt = this.scene.add.text(x, y, this.multiChoiceMap[i] +": " + this.riddle['qOptions'][i], this.qaStyle);
         this.optTxt.setOrigin(0.5, 0.5);
         this.add(this.optTxt);
       }
@@ -162,7 +164,21 @@ export default class Quizcard extends Phaser.GameObjects.Container {
     this.removeObjects(this.getAll().filter(x => x !== this.bg));
     let bgCenterX = this.bg.getCenter().x;
     let bgCenterY = this.bg.getCenter().y;
-    let currentY = this.bg.getCenter().y - this.bg.height/2 - this.lineGap;
+
+    let introStyle = {
+      fontSize: 32,
+      align: "center",
+      fontFamily: '"Roboto Condensed"',
+      color: "white",
+      wordWrap: {
+        width: this.bg.width - (2 * 60),
+        useAdvancedWrap: true
+      }
+    };
+    let intro = this.scene.add.text(bgCenterX, bgCenterY - 70, "The answer is:", this.qaStyle);
+    intro.setOrigin(0.5,0.5);
+    this.add(intro);
+
     this.text = this.scene.add.text(bgCenterX, bgCenterY, this.riddle.aText, this.qaStyle);
     this.text.setOrigin(0.5,0.5);
     this.add(this.text);
@@ -171,6 +187,16 @@ export default class Quizcard extends Phaser.GameObjects.Container {
     let xPos = this.img ? this.img.x : bgCenterX;
     let yPos = this.img ? this.img.y : bgCenterY;
     this.placeImg(img, xPos, yPos, true);
+
+    let confirmText = this.scene.add.text(bgCenterX, bgCenterY + 140, "", this.qaStyle);
+    confirmText.setOrigin(0.5,0.5);
+    if (this.riddle.answeringTeam !== undefined) {
+      confirmText.setText("Was your answer correct? [Y/N]");
+    }
+    else {
+      confirmText.setText("Time is up! Press Space for a new question!");
+    }
+    this.add(confirmText);
   }
 
   getRemainingTime() {
@@ -225,8 +251,6 @@ export default class Quizcard extends Phaser.GameObjects.Container {
 
     if (!isAnswered) {
       this.createCardBack();
-    //  this.scene.team2Finished();
-      // TODO
       return;
     }
 
