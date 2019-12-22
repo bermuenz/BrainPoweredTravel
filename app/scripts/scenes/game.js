@@ -40,7 +40,7 @@ export default class Game extends Phaser.Scene {
     team2Label.setOrigin(0.5, 1);
     team2Label.setPosition(window.innerWidth * 0.9, window.innerHeight * 0.15);
 
-    let routeDistance = 8;
+    let routeDistance = 12;
     let route1 = this.randomRoute(routeDistance);
     let route2 = this.randomRoute(routeDistance);
 
@@ -57,7 +57,7 @@ export default class Game extends Phaser.Scene {
 
     this.initSounds();
 
-    this.initDebug();
+    //this.initDebug();
   }
 
   initSounds() {
@@ -85,6 +85,10 @@ export default class Game extends Phaser.Scene {
 
   registerKeyHandlers() {
       this.input.keyboard.on('keydown_SPACE', () => {
+        if (this.gameFinished) {
+          return;
+        }
+        
         if (this.gameState == 0) {
           this.startQuiz();
         } else if (this.gameState == 2 && this.quizcard.state == 1) {
@@ -516,6 +520,7 @@ export default class Game extends Phaser.Scene {
     console.log("TEAM " + teamId + " is the winner!");
     this.backgroundMusic.stop();
     this.sound.play("winner");
+    this.gameFinished = true;
     let transparentBg = new Phaser.GameObjects.Image(this, 0, 0, 'blackbackground');
     transparentBg.setAlpha(0.7);
     const x = this.cameras.main.width / 2;
