@@ -13,6 +13,11 @@ export default class Team {
 
     this.brainPower = new BrainPower(scene, this);
     this.ecoFootprint = new EcoFootprint(scene, this);
+    this.destinationMarker = new Phaser.GameObjects.Sprite(scene, 0, 0, teamId == 0 ? 'destinationYellow' : 'destinationBlue');
+    scene.add.existing(this.destinationMarker);
+    this.destinationMarker.setOrigin(0.5, 1.1);
+    this.destinationMarker.setScale(0.5, 0.5);
+    this.destinationMarker.setPosition(this.destinationCity.x, this.destinationCity.y);
 
     // Create the token
     this.token = new Phaser.GameObjects.Sprite(scene, 0, 0, teamId == 0 ? 'figure_yellow-11' : 'figure_blue-10');
@@ -20,8 +25,6 @@ export default class Team {
     this.token.setOrigin(teamId == 0 ? 0.8 : 0.2, 1);
     this.token.setScale(0.6, 0.6);
     this.token.setPosition(this.currentCity.x, this.currentCity.y + 3);
-
-    destinationCity.markDestination(teamId == 0 ? 0xffff00 : 0x0000ff);
 
     scene.tweens.add({
         targets: this.token,

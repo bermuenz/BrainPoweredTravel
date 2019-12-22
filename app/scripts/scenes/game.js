@@ -167,6 +167,7 @@ export default class Game extends Phaser.Scene {
   }
 
   team1Finished() {
+    this.gameState = 4;
     this.activeTeam = this.teams[1];
     let reachableCities = this.activeTeam.highlightValidRoutes();
     if (reachableCities.length <= 1) {

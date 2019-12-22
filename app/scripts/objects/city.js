@@ -85,11 +85,6 @@ export default class City extends Phaser.GameObjects.Sprite {
     }
   }
 
-  // TODO mark with a dedicated sprite
-  markDestination(color) {
-    this.setTint(color);
-  }
-
   /**
    *
    */
