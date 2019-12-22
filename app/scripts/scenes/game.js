@@ -84,6 +84,8 @@ export default class Game extends Phaser.Scene {
       this.input.keyboard.on('keydown_SPACE', () => {
         if (this.gameState == 0) {
           this.startQuiz();
+        } else if (this.gameState == 2) {
+          this.quizcard.createCardBack();
         }
       });
       this.input.keyboard.on('keydown_ONE', () => {
@@ -104,7 +106,6 @@ export default class Game extends Phaser.Scene {
     console.log("starting next question");
     this.updateGameState(1);
     this.currentRiddle = this.getRandomRiddle();
-    // TODO derive maxPoints from difficulty
     // show question
     this.currentRiddle.startTime = new Date().getTime();
     this.quizcard = new Quizcard(this, this.currentRiddle);
@@ -166,8 +167,7 @@ export default class Game extends Phaser.Scene {
         this.teams[otherTeam].brainPoints += Math.round(points / 2);
     }
 
-    this.quizcard.destroy();
-    this.quizcard = null;
+    this.destroyQuizcard();
     this.updateGameState(3);
 
     this.activeTeam = this.teams[0];
@@ -176,6 +176,11 @@ export default class Game extends Phaser.Scene {
       this.team1Finished();
     }
 
+  }
+
+  destroyQuizcard() {
+    this.quizcard.destroy();
+    this.quizcard = null;
   }
 
   team1Finished() {
@@ -486,6 +491,7 @@ export default class Game extends Phaser.Scene {
 
   showWinnerScreen(teamId) {
     console.log("TEAM " + teamId + " is the winner!");
+    this.sound.play("winner");
     let transparentBg = new Phaser.GameObjects.Image(this, 0, 0, 'blackbackground');
     transparentBg.setAlpha(0.7);
     const x = this.cameras.main.width / 2;

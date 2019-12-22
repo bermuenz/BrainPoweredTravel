@@ -176,7 +176,7 @@ export default function riddles() {
     {
       'dID': '22',
       'qText' : 'Which planet is closest to the sun in our solar system?',
-      'aText' : 'Mercur',
+      'aText' : 'Mercury',
       'duration' : '120',
       'difficulty' : 'hard',
       'maxPoints' : '50',
