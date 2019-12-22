@@ -21,7 +21,7 @@ export default class City extends Phaser.GameObjects.Sprite {
 
     this.setInteractive();
     this.on('pointerup', (event) => {
-      console.log(this.cityId);
+      console.log("City: " + this.cityId);
       if (this.scene.gameState == 3 || this.scene.gameState == 4) {
         let reachableCities = this.scene.activeTeam.getReachableCities();
         let reachableCity = reachableCities.find(c => c.cityId == this.cityId);
@@ -39,16 +39,37 @@ export default class City extends Phaser.GameObjects.Sprite {
         }
       }
     });
-    /*
+
     this.on('pointerover', (event, gameObject) => {
-      this.highlight(true);
-      // TODO highlight route to this city and display transport vehicle
-      // but restrict to valid game states
+      if (this.scene.gameState == 3 || this.scene.gameState == 4) {
+        let reachableCities = this.scene.activeTeam.getReachableCities();
+        let reachableCity = reachableCities.find(c => c.cityId == this.cityId);
+        if (reachableCity) {
+          // reachableCity.distance
+          // TODO display according transport vehicle
+          this.unhighlightAllConnections();
+          let connections = this.getPath(this.scene.activeTeam.currentCity);
+          for (let connection of connections) {
+            connection.highlight(true);
+          }
+        }
+      }
     });
     this.on('pointerout', (event, gameObject) => {
-      this.highlight(false);
+      this.unhighlightAllConnections();
     });
-    */
+  }
+
+  unhighlightAllConnections() {
+    for (let connectionKey in this.scene.connections) {
+      let connection = this.scene.connections[connectionKey];
+      connection.highlight(false);
+    }
+  }
+
+  getPath(targetCity) {
+    // TODO return all connection objects of the shortest path between the 2 points
+    let lookup = this.scene.connectionLookupTable;
   }
 
   highlight(isHighlight) {

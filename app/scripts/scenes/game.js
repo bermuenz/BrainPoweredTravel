@@ -41,6 +41,7 @@ export default class Game extends Phaser.Scene {
     ];
 
     this.gameState = 0;
+
     this.riddlePool = riddles().riddles;
 
     this.initDebug();
@@ -275,6 +276,7 @@ export default class Game extends Phaser.Scene {
       let connectionObject = new Connection(this, this.cities[connection.start], this.cities[connection.end]);
       this.connections[connection.start + '_' + connection.end] = connectionObject;
     }
+
   }
 
   randomRoute(routeDistance) {
