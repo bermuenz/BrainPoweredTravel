@@ -199,7 +199,7 @@ export default function riddles() {
     },
     {
       'dID': '25',
-      'qText' : 'Which city hast he biggest population in the world?',
+      'qText' : 'Which city has he biggest population in the world?',
       'aText' : 'Tokyo',
       'duration' : '120',
       'difficulty' : 'hard',

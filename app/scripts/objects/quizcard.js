@@ -12,6 +12,14 @@ export default class Quizcard extends Phaser.GameObjects.Container {
     this.middleOffset = 100;
     this.multiChoiceMap = {0: 'A', 1: 'D', 2: 'C', 3: 'B'};
 
+    /**
+     * 0.. ShowQuestion
+     * 1.. ShowConfirm
+     * 2.. ShowCardBack
+     */
+
+    this.state = 0;
+
     // this.riddle = {
     //   'dID' : '31',
     //   'qText' : 'How many pieces are on a chessboard at the beginning of a game?',
@@ -143,6 +151,7 @@ export default class Quizcard extends Phaser.GameObjects.Container {
   }
 
   createConfirm() {
+    this.state = 1;
     this.removeObjects(this.getAll().filter(x => x !== this.bg));
     let bgCenterX = this.bg.getCenter().x;
     let bgCenterY = this.bg.getCenter().y;
@@ -161,6 +170,7 @@ export default class Quizcard extends Phaser.GameObjects.Container {
   }
 
   createCardBack() {
+    this.state = 2;
     this.removeObjects(this.getAll().filter(x => x !== this.bg));
     let bgCenterX = this.bg.getCenter().x;
     let bgCenterY = this.bg.getCenter().y;

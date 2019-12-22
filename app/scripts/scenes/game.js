@@ -87,8 +87,11 @@ export default class Game extends Phaser.Scene {
       this.input.keyboard.on('keydown_SPACE', () => {
         if (this.gameState == 0) {
           this.startQuiz();
-        } else if (this.gameState == 2) {
+        } else if (this.gameState == 2 && this.quizcard.state == 1) {
           this.quizcard.createCardBack();
+        } else if (this.gameState == 2 && this.quizcard.state == 2) {
+          this.destroyQuizcard();
+          this.startQuiz();
         }
       });
       this.input.keyboard.on('keydown_ONE', () => {
@@ -99,6 +102,16 @@ export default class Game extends Phaser.Scene {
       this.input.keyboard.on('keydown_ZERO', () => {
         if (this.gameState == 1) {
           this.buzzerPressed(1);
+        }
+      });
+      this.input.keyboard.on('keydown_Y', () => {
+        if (this.gameState == 2 && this.quizcard.state == 2) {
+          this.answerConfirmed(true);
+        }
+      });
+      this.input.keyboard.on('keydown_N', () => {
+        if (this.gameState == 2 && this.quizcard.state == 2) {
+          this.answerConfirmed(false);
         }
       });
   }
@@ -218,9 +231,9 @@ export default class Game extends Phaser.Scene {
 
   registerDebugKeyHandlers() {
 
-    this.input.keyboard.on('keydown_Y', () => {
+    /*this.input.keyboard.on('keydown_Y', () => {
       this.showWinnerScreen(0);
-    });
+    });*/
 
     this.input.keyboard.on('keydown_V', () => {
       this.teams[0].brainPoints = Math.max(0, this.teams[0].brainPoints-1);
