@@ -93,11 +93,11 @@ export default class City extends Phaser.GameObjects.Sprite {
     }
 
     if (this.scene.gameState == 3) {
-      this.transportSprite.setX(window.innerWidth * 0.15);
+      this.transportSprite.setX(window.innerWidth * 0.10);
       this.transportSprite.setY(window.innerHeight * 0.45);
     }
     else if ( this.scene.gameState == 4) {
-      this.transportSprite.setX(window.innerWidth * 0.85);
+      this.transportSprite.setX(window.innerWidth * 0.88);
       this.transportSprite.setY(window.innerHeight * 0.45);
     }
       this.transportSprite.setVisible(bool);
