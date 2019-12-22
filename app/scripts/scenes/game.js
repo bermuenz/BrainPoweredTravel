@@ -85,7 +85,7 @@ export default class Game extends Phaser.Scene {
         if (this.gameState == 0) {
           this.startQuiz();
         } else if (this.gameState == 2) {
-          //this.quizcard.
+          this.quizcard.createCardBack();
         }
       });
       this.input.keyboard.on('keydown_ONE', () => {
@@ -106,7 +106,6 @@ export default class Game extends Phaser.Scene {
     console.log("starting next question");
     this.updateGameState(1);
     this.currentRiddle = this.getRandomRiddle();
-    // TODO derive maxPoints from difficulty
     // show question
     this.currentRiddle.startTime = new Date().getTime();
     this.quizcard = new Quizcard(this, this.currentRiddle);

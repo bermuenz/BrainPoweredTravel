@@ -11,8 +11,6 @@ export default class Quizcard extends Phaser.GameObjects.Container {
     this.lineGap = 65;
     this.middleOffset = 100;
 
-
-
     // this.riddle = {
     //   'dID' : '31',
     //   'qText' : 'How many pieces are on a chessboard at the beginning of a game?',
@@ -226,7 +224,8 @@ export default class Quizcard extends Phaser.GameObjects.Container {
   flip(isAnswered = false) {
 
     if (!isAnswered) {
-      this.scene.team2Finished();
+      this.createCardBack();
+    //  this.scene.team2Finished();
       // TODO
       return;
     }
