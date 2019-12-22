@@ -55,7 +55,19 @@ export default class Game extends Phaser.Scene {
 
     this.createMessageBox();
 
+    this.initSounds();
+
     this.initDebug();
+  }
+
+  initSounds() {
+      this.sound.add('bicycle');
+      this.sound.add('train');
+      this.sound.add('car');
+      this.sound.add('plane');
+      this.sound.add('correct');
+      this.sound.add('wrong');
+      this.sound.add('winner');
   }
 
   initDebug() {
@@ -190,6 +202,10 @@ export default class Game extends Phaser.Scene {
 
 
   registerDebugKeyHandlers() {
+
+    this.input.keyboard.on('keydown_Y', () => {
+      this.showWinnerScreen(0);
+    });
 
     this.input.keyboard.on('keydown_V', () => {
       this.teams[0].brainPoints = Math.max(0, this.teams[0].brainPoints-1);
@@ -421,5 +437,23 @@ export default class Game extends Phaser.Scene {
     for (let team of this.teams) {
       team.reactToGameStateChange();
     }
+  }
+
+  showWinnerScreen(teamId) {
+    console.log("TEAM " + teamId + " is the winner!");
+    let transparentBg = new Phaser.GameObjects.Image(this, 0, 0, 'blackbackground');
+    transparentBg.setAlpha(0.7);
+    const x = this.cameras.main.width / 2;
+    const y = this.cameras.main.height / 2;
+    transparentBg.setPosition(x, y);
+    transparentBg.setOrigin(0.5);
+    transparentBg.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
+    this.add.existing(transparentBg);
+
+    let winnerScreen = new Phaser.GameObjects.Image(this, 0, 0, teamId == 0 ? 'Winner1' : 'Winner2');
+    winnerScreen.setPosition(x, y);
+    winnerScreen.setOrigin(0.5);
+    winnerScreen.setDisplaySize(this.cameras.main.width * 0.5, this.cameras.main.height * 0.5);
+    this.add.existing(winnerScreen);
   }
 }

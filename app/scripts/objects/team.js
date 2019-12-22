@@ -15,7 +15,7 @@ export default class Team {
     this.ecoFootprint = new EcoFootprint(scene, this);
     this.destinationMarker = new Phaser.GameObjects.Sprite(scene, 0, 0, teamId == 0 ? 'destinationYellow' : 'destinationBlue');
     scene.add.existing(this.destinationMarker);
-    this.destinationMarker.setOrigin(0.5, 1.1);
+    this.destinationMarker.setOrigin(0.5, 0.9);
     this.destinationMarker.setScale(0.4, 0.4);
     this.destinationMarker.setPosition(this.destinationCity.x, this.destinationCity.y);
 
@@ -64,7 +64,7 @@ export default class Team {
             this.scene.tweens.remove(moveTween);
             if (this.currentCity.cityId == this.destinationCity.cityId) {
               // TODO go to winner screen
-              console.log("TEAM " + this.teamId + " is the winner!");
+              this.scene.showWinnerScreen(this.teamId);
             }
             resolve();
           }
@@ -104,18 +104,24 @@ export default class Team {
 
   reactToGameStateChange() {
     if (this.teamId == 0 && this.scene.gameState == 3) {
+      if (this.tokenTween) {
+        this.tokenTween.stop();
+      }
       this.tokenTween = this.scene.tweens.add({
           targets: this.token,
-          scale: 0.75,
+          scale: 0.8,
           duration: 500,
           ease: 'Linear',
           yoyo: -1,
           repeat: -1
       });
     } else if (this.teamId == 1 && this.scene.gameState == 4) {
+      if (this.tokenTween) {
+        this.tokenTween.stop();
+      }
       this.tokenTween = this.scene.tweens.add({
           targets: this.token,
-          scale: 0.75,
+          scale: 0.8,
           duration: 500,
           ease: 'Linear',
           yoyo: -1,
@@ -125,6 +131,14 @@ export default class Team {
       if (this.tokenTween) {
         this.tokenTween.stop();
       }
+      this.tokenTween = this.scene.tweens.add({
+        targets: this.token,
+        scale: 0.7,
+        duration: 1000,
+        ease: 'Linear',
+        yoyo: -1,
+        repeat: -1
+      });
     }
   }
 
