@@ -354,7 +354,48 @@ export default class Game extends Phaser.Scene {
   }
 
   getShortestPathBetweenCities(startCity, targetCity) {
+    let previousCityMap = {};
+    let visitedCities = [startCity.cityId];
+    let currentBacklog = [startCity];
+    let nextBacklog = [];
+    let currentDistance = 1;
+    while (currentBacklog.length > 0) {
+      if (currentDistance > 4) {
+        break;
+      }
+      let currentCity = currentBacklog.pop();
+      if (currentCity.cityId == targetCity.cityId) {
+        break;
+      }
+      for (let nextCity of this.connectionLookupTable[currentCity.cityId]) {
 
+        if (visitedCities.includes(nextCity)) {
+          continue;
+        }
+        if (!visitedCities.includes(nextCity)) {
+          nextBacklog.push(this.cities[nextCity]);
+          visitedCities.push(nextCity);
+          previousCityMap[nextCity] = currentCity.cityId;
+        }
+      }
+      if (currentBacklog.length <= 0) {
+        currentBacklog = nextBacklog;
+        nextBacklog = [];
+        currentDistance++;
+      }
+    }
+
+    let path = [];
+    let current = targetCity.cityId;
+    while (previousCityMap[current]) {
+      if (this.connections[current + "_" + previousCityMap[current]]) {
+        path.push(this.connections[current + "_" + previousCityMap[current]]);
+      } else if (this.connections[previousCityMap[current] + "_" + current]) {
+        path.push(this.connections[previousCityMap[current] + "_" + current]);
+      }
+      current = previousCityMap[current];
+    }
+    return path;
   }
 
   /**
