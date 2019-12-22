@@ -69,6 +69,16 @@ export default class Team {
           break;
       }
 
+      this.isMoving = true;
+      this.transportTween = this.scene.tweens.add({
+        targets: this.currentCity.transportSprite,
+        scale: 0.35,
+        duration: 1000,
+        ease: 'Linear',
+        yoyo: -1,
+        repeat: -1
+      });
+
       let moveTween = this.scene.tweens.add({
           targets: this.token,
           x: this.currentCity.x,
@@ -79,9 +89,11 @@ export default class Team {
             this.scene.tweens.remove(moveTween);
             this.currentCity.unhighlightAllConnections();
             if (this.currentCity.cityId == this.destinationCity.cityId) {
-              // TODO go to winner screen
               this.scene.showWinnerScreen(this.teamId);
             }
+            this.isMoving = false;
+            this.currentCity.setTransInvisible();
+            this.transportTween.stop();
             resolve();
           }
       });

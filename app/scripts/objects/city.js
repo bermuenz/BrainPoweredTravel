@@ -18,7 +18,7 @@ export default class City extends Phaser.GameObjects.Sprite {
       this.tint = 0xaa3f3f;
     }
 
-    this.transportSprite= this.scene.add.sprite(0, 0, "transport/Transport1");
+    this.transportSprite = this.scene.add.sprite(0, 0, "transport/Transport1");
     this.transportSprite.setVisible(false);
 
     scene.add.existing(this);
@@ -32,7 +32,6 @@ export default class City extends Phaser.GameObjects.Sprite {
         if (reachableCity) {
           let city = this.scene.cities[reachableCity.cityId];
           let distance = reachableCity.distance;
-          // TODO animate transport vehicle
           this.scene.activeTeam.move(city, distance).then(() => {
             if (this.scene.activeTeam.teamId == 0) {
               this.scene.team1Finished();
@@ -49,8 +48,6 @@ export default class City extends Phaser.GameObjects.Sprite {
         let reachableCities = this.scene.activeTeam.getReachableCities();
         let reachableCity = reachableCities.find(c => c.cityId == this.cityId);
         if (reachableCity) {
-          // reachableCity.distance
-          // TODO display according transport vehicle
           this.showTransport(reachableCity.distance);
           this.unhighlightAllConnections();
           let connections = this.getPath(this.scene.activeTeam.currentCity);
@@ -67,45 +64,56 @@ export default class City extends Phaser.GameObjects.Sprite {
   }
 
   showTransport(distance) {
-    let bool=true;
+    let bool = true;
     switch (distance) {
       case 1: {
         this.transportSprite.setTexture("transport/Transport1");
-        this.transportSprite.setScale(0.25,0.25);
+        this.transportSprite.setScale(0.25, 0.25);
         break;
       }
       case 2: {
         this.transportSprite.setTexture("transport/Transport2");
-        this.transportSprite.setScale(0.2,0.2);
+        this.transportSprite.setScale(0.2, 0.2);
         break;
       }
       case 3: {
         this.transportSprite.setTexture("transport/Transport3");
-        this.transportSprite.setScale(0.15,0.15);
+        this.transportSprite.setScale(0.15, 0.15);
         break;
       }
       case 4: {
         this.transportSprite.setTexture("transport/Transport4");
-        this.transportSprite.setScale(0.20,0.20);
+        this.transportSprite.setScale(0.20, 0.20);
         break;
       }
-      default: bool =false;
+      default:
+        bool = false;
     }
 
     if (this.scene.gameState == 3) {
       this.transportSprite.setX(window.innerWidth * 0.10);
       this.transportSprite.setY(window.innerHeight * 0.45);
-    }
-    else if ( this.scene.gameState == 4) {
+    } else if (this.scene.gameState == 4) {
       this.transportSprite.setX(window.innerWidth * 0.88);
       this.transportSprite.setY(window.innerHeight * 0.45);
     }
-      this.transportSprite.setVisible(bool);
+    this.transportSprite.setVisible(bool);
+  }
+
+  setTransInvisible() {
+
+    // Check if one of the team is moving
+    let moving = false;
+    for (let team of this.scene.teams) {
+      if (team.isMoving) {
+        moving = true;
+      }
     }
 
-    setTransInvisible(){
+    if (!moving) {
       this.transportSprite.setVisible(false);
     }
+  }
 
   unhighlightAllConnections() {
     for (let connectionKey in this.scene.connections) {
