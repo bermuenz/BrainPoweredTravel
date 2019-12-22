@@ -8,6 +8,18 @@ export default class Quizcard extends Phaser.GameObjects.Container {
     super(scene, 0, 0);
     this.scene = scene;
     this.riddle = riddle;
+
+    this.riddle = {
+      'dID' : '3',
+      'qText' : 'How many pieces are on a chessboard at the beginning of a game?',
+      'qOptions' : ['32','28', '34','30'],
+      'aText' : '32: Each opponent has 1 king, 1 queen, 2 rooks, 2 bishops, 2 knights, and 8 pawns.',
+      'duration' : '120',
+      'difficulty' : 'hard',
+      'maxPoints' : '50',
+      'startTime': new Date()
+    };
+
     const x = this.scene.cameras.main.width / 2;
     const y = this.scene.cameras.main.height / 2;
 
@@ -22,8 +34,26 @@ export default class Quizcard extends Phaser.GameObjects.Container {
     // this.setWidth(bg.width);
     // this.setHeight(bg.height);
 
-    var txtStyle = {
+
+    // score etc
+    let txtStyleTop = {
       fontSize: 18,
+      align: "center",
+      fontFamily: '"Roboto Condensed"',
+      color: "white"
+    };
+    let offsetX = 65;
+    let offsetY = 65;
+    this.difficultyText = this.scene.add.text((bg.x - bg.width/2) + offsetX, (bg.y - bg.height/2) + offsetY, `Difficulty: ${this.riddle.difficulty}`, txtStyleTop);
+    this.timeRemainingTxt = this.scene.add.text((bg.x + bg.width/2) - offsetX * 2.1, (bg.y - bg.height/2) + offsetY, `Time: `, txtStyleTop);
+    // this.pointsTxt = this.scene.add.text(bg.width - 100, 50, `Difficulty: ${this.riddle.difficulty}`, txtStyleTop);
+    this.add(this.difficultyText);
+    this.add(this.timeRemainingTxt);
+
+    // question
+    let currentOffsetY = 0.45;
+    let txtStyle = {
+      fontSize: 22,
       align: "center",
       fontFamily: '"Roboto Condensed"',
       color: "white",
@@ -32,15 +62,32 @@ export default class Quizcard extends Phaser.GameObjects.Container {
         useAdvancedWrap: true
       }
     };
-
-    // question
-    this.text = this.scene.add.text(centerX, centerY * 0.85, this.riddle.qText, txtStyle);
+    this.text = this.scene.add.text(centerX, centerY * currentOffsetY, this.riddle.qText, txtStyle);
     this.text.setOrigin(0.5, 0.5);
+    // this.text.setShadow(10, 10, "#FFFFFF", 10, true, true);
     this.add(this.text);
-    this.img = this.scene.add.sprite(centerX, centerY * 1.25, 'logo').setOrigin(0);
-    this.img.setOrigin(0.5, 0.5);
-    this.img.setScale(0.2, 0.2);
-    this.add(this.img);
+    currentOffsetY += 0.10;
+    let img = "riddles/q" + this.riddle.dID;
+    if (this.riddle['qOptions']) {
+      let middleOffset = 70;
+      for (let i=0; i < this.riddle['qOptions'].length; i++) {
+        // let currentY = centerY * (currentOffsetY + i * 0.10);
+        let currentY = centerY + (i%3 === 0 ? -80 : -50);
+        let currentX = centerX + (i%2 === 0 ? -middleOffset : middleOffset);
+        console.log(centerX);
+        console.log(currentX);
+        let tx = this.scene.add.text(currentX, currentY, i +": " + this.riddle['qOptions'][i], txtStyle);
+        tx.setOrigin(0.5, 0.5);
+        this.add(tx);
+      }
+    }
+    if (this.scene.textures.exists(img)) {
+      this.img = this.scene.add.sprite(centerX, centerY * 1.3, img).setOrigin(0);
+      this.img.setOrigin(0.5, 0.5);
+      this.img.setScale(0.4, 0.4);
+      this.add(this.img);
+    }
+
 
     // answer
 
@@ -56,14 +103,42 @@ export default class Quizcard extends Phaser.GameObjects.Container {
     return Math.round(this.riddle.duration - elapsedTime);
   }
 
+  fadeoutObjects(objs) {
+    let centerX = this.scene.cameras.main.width  * 0.5;
+    let centerY = this.scene.cameras.main.height  * 0.5;
+    let duration = 20;
+    let fadeout = this.scene.tweens.add({
+      targets: objs,
+      alpa: 0.00,
+      ease: 'Linear',
+      duration: duration,
+      onComplete: () => {
+        this.scene.tweens.remove(fadeout);
+        let fadein = this.scene.tweens.add({
+          targets: objs,
+          alpa: 1.00,
+          ease: 'Linear',
+          duration: duration,
+          onComplete: () => {
+            this.scene.tweens.remove(fadein);
+          }
+        });
+      }
+    });
+
+  }
+
   flip(isAnswered = false) {
+
+    this.fadeoutObjects([this.difficultyText, this.timeRemainingTxt]);
+    let duration = 300;
     for (let obj of this.list) {
       // scale horizontally to disappear
       let flipA = this.scene.tweens.add({
           targets: obj,
           scaleX: 0.01,
           ease: 'Linear',
-          duration: 300,
+          duration: duration,
           repeat: 0,
           yoyo: false,
           onComplete: () => {
@@ -74,7 +149,7 @@ export default class Quizcard extends Phaser.GameObjects.Container {
                 targets: obj,
                 scaleX: 1.0,
                 ease: 'Linear',
-                duration: 300,
+                duration: duration,
                 repeat: 0,
                 yoyo: false,
                 onComplete: () => {
@@ -100,6 +175,8 @@ export default class Quizcard extends Phaser.GameObjects.Container {
    */
   update() {
     //console.log(this.getRemainingTime(), this.computePoints());
+    this.timeRemainingTxt.text = 'Time: ' + this.getRemainingTime();
+    // this.pointsTxt.text = this.computePoints();
   }
 
 
