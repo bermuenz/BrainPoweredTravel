@@ -67,7 +67,7 @@ export default function riddles() {
     },
     {
       'dID': '9',
-      'qText' : 'Which ist he longest river in the world?',
+      'qText' : 'Which ist the longest river in the world?',
       'aText' : 'The Amazonas',
       'duration' : '60',
       'difficulty' : 'easy',
@@ -83,7 +83,7 @@ export default function riddles() {
     },
     {
       'dID': '11',
-      'qText' : 'Which agent has the licence to kill?',
+      'qText' : 'Which agent has the license to kill?',
       'aText' : 'James Bond',
       'duration' : '60',
       'difficulty' : 'easy',
