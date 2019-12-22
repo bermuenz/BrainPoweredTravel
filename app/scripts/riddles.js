@@ -67,7 +67,7 @@ export default function riddles() {
     },
     {
       'dID': '9',
-      'qText' : 'Which ist the longest river in the world?',
+      'qText' : 'Which is the longest river in the world?',
       'aText' : 'The Amazonas',
       'duration' : '60',
       'difficulty' : 'easy',
@@ -127,7 +127,7 @@ export default function riddles() {
     {
       'dID': '16',
       'qText' : 'What is a diamond made of?',
-      'qOptions' : ['Carbon','Water', 'Gold','Sulphur'],
+      'qOptions' : ['carbon','water', 'gold','sulphur'],
       'aText' : 'Carbon',
       'duration' : '60',
       'difficulty' : 'easy',
@@ -207,7 +207,7 @@ export default function riddles() {
     },
     {
       'dID': '26',
-      'qText' : 'How many kilometres do you run during a marathon?',
+      'qText' : 'How many kilometers do you run during a marathon?',
       'qOptions' : ['60,105 km', '100 km','42,195 km','10 km'],
       'aText' : '42,195 km',
       'duration' : '120',
