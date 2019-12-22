@@ -36,12 +36,13 @@ export default class Game extends Phaser.Scene {
     var txt=this.add.text(1170, 67, "Team 2", {font: "32px Lucida Calligraphy", fill: "#0d67ff"});
     txt.setShadow(5,5,'#000000',50,true,true);
 
+    let routeDistance = 10;
+    let route1 = this.randomRoute(routeDistance);
+    let route2 = this.randomRoute(routeDistance);
 
     this.teams = [
-      // TODO pre-define start cities
-      // TODO define target cities
-      new Team(this, 0, this.cities["48"]),
-      new Team(this, 1, this.cities["Melbourne"])
+      new Team(this, 0, route1.start, route1.end),
+      new Team(this, 1, route2.start, route2.end)
     ];
 
     this.gameState = 0;
@@ -146,26 +147,38 @@ export default class Game extends Phaser.Scene {
         let otherTeam = (this.currentRiddle.answeringTeam + 1) % 2;
         this.teams[otherTeam].brainPoints += Math.round(points / 2);
     }
+
+    this.quizcard.destroy();
+    this.quizcard = null;
     this.gameState = 3;
 
     this.activeTeam = this.teams[0];
     let reachableCities = this.activeTeam.highlightValidRoutes();
+    if (reachableCities.length <= 1) {
+      this.team1Finished();
+    }
 
+  }
 
-    // TODO skip travel -> click on current city
+  team1Finished() {
+    this.activeTeam = this.teams[1];
+    let reachableCities = this.activeTeam.highlightValidRoutes();
+    if (reachableCities.length <= 1) {
+      this.team2Finished();
+    }
+  }
 
+  team2Finished() {
     // finish the round
     this.teams[0].reduceEcoPoints();
     this.teams[1].reduceEcoPoints();
     this.activeTeam = null;
-    this.quizcard.destroy();
-    this.quizcard = null;
     this.gameState = 0;
-    // TODO reset highlights
-
+    // reset highlights
+    for (let cityId in this.cities) {
+      this.cities[cityId].highlight(false);
+    }
   }
-
-
 
 
 
@@ -269,6 +282,52 @@ export default class Game extends Phaser.Scene {
     }
   }
 
+  randomRoute(routeDistance) {
+    let count = 0;
+    while (count < 100) {
+      let cityIds = Object.keys(this.cities);
+      let startCity = this.cities[cityIds[Math.floor(Math.random() * cityIds.length)]];
+      let destCityIds = this.getReachableCities(startCity, routeDistance).filter(c => c.distance == routeDistance);
+      if (destCityIds.length > 0) {
+        let destCity =  this.cities[destCityIds[Math.floor(Math.random() * destCityIds.length)].cityId];
+        if (!startCity.isIntermediatePoint && !destCity.isIntermediatePoint) {
+          return {
+            start: startCity,
+            end: destCity
+          }
+        }
+      }
+      count++;
+    }
+    console.error("no route found with distance " + routeDistance);
+  }
+
+
+
+  getReachableCities(startCity, maxDistance) {
+    let visitedCities = [startCity.cityId];
+    let currentBacklog = [startCity.cityId];
+    let nextBacklog = [];
+    let reachableCities = [{cityId: startCity.cityId, distance: 0}]; // click on the current city means skip travelling turn
+    let currentDistance = 1;
+    while (currentBacklog.length > 0) {
+      let currentCity = currentBacklog.pop();
+      for (let nextCity of this.connectionLookupTable[currentCity]) {
+          if (visitedCities.includes(nextCity)) {
+            continue;
+          }
+          visitedCities.push(nextCity);
+          reachableCities.push({cityId: nextCity, distance: currentDistance});
+          nextBacklog.push(nextCity);
+      }
+      if (currentBacklog.length <= 0 && currentDistance < maxDistance) {
+        currentBacklog = nextBacklog;
+        nextBacklog = [];
+        currentDistance++;
+      }
+    }
+    return reachableCities;
+  }
 
   /**
    *  Called when a scene is updated. Updates to game logic, physics and game
