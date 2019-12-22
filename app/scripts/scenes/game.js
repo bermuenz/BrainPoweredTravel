@@ -88,7 +88,7 @@ export default class Game extends Phaser.Scene {
         if (this.gameFinished) {
           return;
         }
-        
+
         if (this.gameState == 0) {
           this.startQuiz();
         } else if (this.gameState == 2 && this.quizcard.state == 1) {
@@ -131,7 +131,6 @@ export default class Game extends Phaser.Scene {
     this.currentRiddle.startTime = new Date().getTime();
     this.quizcard = new Quizcard(this, this.currentRiddle);
     this.quizTimeout = setTimeout(() => {
-      // TODO show "time over" message
       console.log("time over");
       this.showAnswer(false);
     }, this.currentRiddle.duration * 1000);
@@ -161,14 +160,6 @@ export default class Game extends Phaser.Scene {
   showAnswer(isAnswered) {
     this.updateGameState(2);
     this.quizcard.flip(isAnswered);
-    // TODO adapt buttons:
-    //   - if a team answered -> correct, wrong -> answerConfirmed
-    //   - else -> ok -> back to gameState 0
-    //if (this.currentRiddle.answeringTeam != undefined) {
-
-    //} else {
-
-    //}
   }
 
 

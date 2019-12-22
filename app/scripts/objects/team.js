@@ -89,7 +89,6 @@ export default class Team {
             this.scene.tweens.remove(moveTween);
             this.currentCity.unhighlightAllConnections();
             if (this.currentCity.cityId == this.destinationCity.cityId) {
-              // TODO go to winner screen
               this.scene.showWinnerScreen(this.teamId);
             }
             this.isMoving = false;

@@ -32,7 +32,6 @@ export default class City extends Phaser.GameObjects.Sprite {
         if (reachableCity) {
           let city = this.scene.cities[reachableCity.cityId];
           let distance = reachableCity.distance;
-          // TODO animate transport vehicle
           this.scene.activeTeam.move(city, distance).then(() => {
             if (this.scene.activeTeam.teamId == 0) {
               this.scene.team1Finished();
@@ -49,8 +48,6 @@ export default class City extends Phaser.GameObjects.Sprite {
         let reachableCities = this.scene.activeTeam.getReachableCities();
         let reachableCity = reachableCities.find(c => c.cityId == this.cityId);
         if (reachableCity) {
-          // reachableCity.distance
-          // TODO display according transport vehicle
           this.showTransport(reachableCity.distance);
           this.unhighlightAllConnections();
           let connections = this.getPath(this.scene.activeTeam.currentCity);
