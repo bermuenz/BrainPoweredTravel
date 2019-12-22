@@ -15,7 +15,7 @@ export default class Team {
     this.ecoFootprint = new EcoFootprint(scene, this);
     this.destinationMarker = new Phaser.GameObjects.Sprite(scene, 0, 0, teamId == 0 ? 'destinationYellow' : 'destinationBlue');
     scene.add.existing(this.destinationMarker);
-    this.destinationMarker.setOrigin(0.5, 1.1);
+    this.destinationMarker.setOrigin(0.5, 0.9);
     this.destinationMarker.setScale(0.4, 0.4);
     this.destinationMarker.setPosition(this.destinationCity.x, this.destinationCity.y);
 
