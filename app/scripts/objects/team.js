@@ -77,6 +77,7 @@ export default class Team {
           ease: 'Quadratic',
           onComplete: () => {
             this.scene.tweens.remove(moveTween);
+            this.currentCity.unhighlightAllConnections();
             if (this.currentCity.cityId == this.destinationCity.cityId) {
               // TODO go to winner screen
               this.scene.showWinnerScreen(this.teamId);
