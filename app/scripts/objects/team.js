@@ -3,12 +3,13 @@ import EcoFootprint from '@/objects/ecoFootprint';
 
 export default class Team {
 
-  constructor(scene, teamId, startCity) {
+  constructor(scene, teamId, startCity, destinationCity) {
     this.scene = scene;
     this.teamId = teamId;
     this.brainPoints = 0;
     this.ecoPoints = 0;
     this.currentCity = startCity;
+    this.destinationCity = destinationCity;
 
     this.brainPower = new BrainPower(scene, this);
     this.ecoFootprint = new EcoFootprint(scene, this);
@@ -19,6 +20,8 @@ export default class Team {
     this.token.setOrigin(teamId == 0 ? 0.8 : 0.2, 1);
     this.token.setScale(0.6, 0.6);
     this.token.setPosition(this.currentCity.x, this.currentCity.y + 3);
+
+    destinationCity.markDestination(teamId == 0 ? 0xffff00 : 0x0000ff);
 
     scene.tweens.add({
         targets: this.token,
@@ -52,10 +55,14 @@ export default class Team {
           targets: this.token,
           x: this.currentCity.x,
           y: this.currentCity.y + 3,
-          duration: 1000,
+          duration: distance * 1000,
           ease: 'Quadratic',
           onComplete: () => {
             this.scene.tweens.remove(moveTween);
+            if (this.currentCity.cityId == this.destinationCity.cityId) {
+              // TODO go to winner screen
+              console.log("TEAM " + this.teamId + " is the winner!");
+            }
             resolve();
           }
       });
@@ -77,28 +84,8 @@ export default class Team {
       maxDistance = 1;
     }
 
-    let visitedCities = [this.currentCity.cityId];
-    let currentBacklog = [this.currentCity.cityId];
-    let nextBacklog = [];
-    let reachableCities = [];
-    let currentDistance = 1;
-    while (currentBacklog.length > 0) {
-      let currentCity = currentBacklog.pop();
-      for (let nextCity of this.scene.connectionLookupTable[currentCity]) {
-          if (visitedCities.includes(nextCity)) {
-            continue;
-          }
-          visitedCities.push(nextCity);
-          reachableCities.push({cityId: nextCity, distance: currentDistance});
-          nextBacklog.push(nextCity);
-      }
-      if (currentBacklog.length <= 0 && currentDistance < maxDistance) {
-        currentBacklog = nextBacklog;
-        nextBacklog = [];
-        currentDistance++;
-      }
-    }
-    return reachableCities;
+    return this.scene.getReachableCities(this.currentCity, maxDistance);
+
   }
 
   highlightValidRoutes() {
