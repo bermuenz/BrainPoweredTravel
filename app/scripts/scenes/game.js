@@ -147,18 +147,16 @@ export default class Game extends Phaser.Scene {
 
     this.activeTeam = this.teams[0];
     let reachableCities = this.activeTeam.highlightValidRoutes();
-    if (reachableCities.length == 0) {
+    if (reachableCities.length <= 1) {
       this.team1Finished();
     }
-
-    // TODO skip travel -> click on current city
 
   }
 
   team1Finished() {
     this.activeTeam = this.teams[1];
     let reachableCities = this.activeTeam.highlightValidRoutes();
-    if (reachableCities.length == 0) {
+    if (reachableCities.length <= 1) {
       this.team2Finished();
     }
   }

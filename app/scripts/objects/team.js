@@ -80,7 +80,7 @@ export default class Team {
     let visitedCities = [this.currentCity.cityId];
     let currentBacklog = [this.currentCity.cityId];
     let nextBacklog = [];
-    let reachableCities = [];
+    let reachableCities = [{cityId: this.currentCity.cityId, distance: 0}]; // click on the current city means skip travelling turn
     let currentDistance = 1;
     while (currentBacklog.length > 0) {
       let currentCity = currentBacklog.pop();
