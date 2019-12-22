@@ -64,7 +64,7 @@ export default class Team {
             this.scene.tweens.remove(moveTween);
             if (this.currentCity.cityId == this.destinationCity.cityId) {
               // TODO go to winner screen
-              console.log("TEAM " + this.teamId + " is the winner!");
+              this.scene.showWinnerScreen(this.teamId);
             }
             resolve();
           }
