@@ -49,7 +49,7 @@ export default class Game extends Phaser.Scene {
       new Team(this, 1, route2.start, route2.end)
     ];
 
-    this.gameState = 0;
+    this.updateGameState(0);
 
     this.riddlePool = riddles().riddles;
 
@@ -90,7 +90,7 @@ export default class Game extends Phaser.Scene {
 
   startQuiz() {
     console.log("starting next question");
-    this.gameState = 1;
+    this.updateGameState(1);
     this.currentRiddle = this.getRandomRiddle();
     // TODO derive maxPoints from difficulty
     // show question
@@ -124,7 +124,7 @@ export default class Game extends Phaser.Scene {
   }
 
   showAnswer(isAnswered) {
-    this.gameState = 2;
+    this.updateGameState(2);
     this.quizcard.flip(isAnswered);
     // TODO adapt buttons:
     //   - if a team answered -> correct, wrong -> answerConfirmed
@@ -156,7 +156,7 @@ export default class Game extends Phaser.Scene {
 
     this.quizcard.destroy();
     this.quizcard = null;
-    this.gameState = 3;
+    this.updateGameState(3);
 
     this.activeTeam = this.teams[0];
     let reachableCities = this.activeTeam.highlightValidRoutes();
@@ -167,7 +167,7 @@ export default class Game extends Phaser.Scene {
   }
 
   team1Finished() {
-    this.gameState = 4;
+    this.updateGameState(4);
     this.activeTeam = this.teams[1];
     let reachableCities = this.activeTeam.highlightValidRoutes();
     if (reachableCities.length <= 1) {
@@ -180,7 +180,7 @@ export default class Game extends Phaser.Scene {
     this.teams[0].reduceEcoPoints();
     this.teams[1].reduceEcoPoints();
     this.activeTeam = null;
-    this.gameState = 0;
+    this.updateGameState(0);
     // reset highlights
     for (let cityId in this.cities) {
       this.cities[cityId].highlight(false);
@@ -392,7 +392,6 @@ export default class Game extends Phaser.Scene {
 
   updateMessageBoxText() {
     // End method if messageBox is not yet defined
-    console.log(this.messageBox);
     if (!this.messageBox) {
       return;
     }
@@ -413,6 +412,14 @@ export default class Game extends Phaser.Scene {
       case 4:
           this.messageBox.setText("Team 2, it's your turn!");
           break;
+    }
+  }
+
+  updateGameState(newState) {
+    this.gameState = newState;
+
+    for (let team of this.teams) {
+      team.reactToGameStateChange();
     }
   }
 }

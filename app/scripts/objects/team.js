@@ -16,7 +16,7 @@ export default class Team {
     this.destinationMarker = new Phaser.GameObjects.Sprite(scene, 0, 0, teamId == 0 ? 'destinationYellow' : 'destinationBlue');
     scene.add.existing(this.destinationMarker);
     this.destinationMarker.setOrigin(0.5, 1.1);
-    this.destinationMarker.setScale(0.5, 0.5);
+    this.destinationMarker.setScale(0.4, 0.4);
     this.destinationMarker.setPosition(this.destinationCity.x, this.destinationCity.y);
 
     // Create the token
@@ -27,9 +27,9 @@ export default class Team {
     this.token.setPosition(this.currentCity.x, this.currentCity.y + 3);
 
     scene.tweens.add({
-        targets: this.token,
-        scale: 0.75,
-        duration: 500,
+        targets: this.destinationMarker,
+        scale: 0.5,
+        duration: 1000,
         ease: 'Linear',
         yoyo: -1,
         repeat: -1
@@ -100,6 +100,32 @@ export default class Team {
       this.scene.cities[city.cityId].highlight(true);
     }
     return reachableCities;
+  }
+
+  reactToGameStateChange() {
+    if (this.teamId == 0 && this.scene.gameState == 3) {
+      this.tokenTween = this.scene.tweens.add({
+          targets: this.token,
+          scale: 0.75,
+          duration: 500,
+          ease: 'Linear',
+          yoyo: -1,
+          repeat: -1
+      });
+    } else if (this.teamId == 1 && this.scene.gameState == 4) {
+      this.tokenTween = this.scene.tweens.add({
+          targets: this.token,
+          scale: 0.75,
+          duration: 500,
+          ease: 'Linear',
+          yoyo: -1,
+          repeat: -1
+      });
+    } else {
+      if (this.tokenTween) {
+        this.tokenTween.stop();
+      }
+    }
   }
 
   /**
